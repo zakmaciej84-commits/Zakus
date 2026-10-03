@@ -1,3 +1,162 @@
+<!DOCTYPE html>
+<html lang="pl" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#080b14" />
+  <title>TechnixPro — Community Hub</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://ton.org/download/tonweb.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              bg: '#080b14',
+              panel: '#111827',
+              border: '#1f293d',
+              accent: '#8b5cf6',
+              cyan: '#22d3ee',
+              pink: '#ec4899'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    :root {
+      --bg: #080b14;
+      --panel: rgba(17,24,39,0.86);
+      --panel-strong: rgba(15,23,42,0.95);
+      --bg-soft: rgba(15,23,42,0.72);
+      --border: rgba(148,163,184,0.18);
+      --cyan: #22d3ee;
+      --violet: #8b5cf6;
+      --pink: #ec4899;
+      --amber: #fbbf24;
+      --green: #34d399;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --danger: #f87171;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    html, body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top, rgba(139, 92, 246, 0.18), transparent 24%),
+        radial-gradient(circle at bottom, rgba(34, 211, 238, 0.12), transparent 24%),
+        var(--bg);
+    }
+
+    .muted { color: var(--muted); }
+
+    .panel {
+      background: linear-gradient(145deg, rgba(21, 29, 46, 0.76), rgba(13, 19, 32, 0.92));
+      border: 1px solid rgba(39, 52, 77, 0.72);
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow);
+      border-radius: 18px;
+    }
+
+    .nav-btn {
+      color: var(--muted);
+      transition: all 0.2s ease;
+      position: relative;
+      min-width: 0;
+    }
+
+    .nav-btn.active {
+      color: var(--cyan);
+      transform: translateY(-2px);
+    }
+
+    .screen { animation: fadeIn 0.25s ease; }
+    .scroll-none::-webkit-scrollbar { display: none; }
+    .scroll-none { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .floating-toast {
+      position: fixed;
+      left: 50%;
+      bottom: 90px;
+      transform: translateX(-50%) translateY(16px);
+      opacity: 0;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(148,163,184,0.2);
+      color: #f8fafc;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.4);
+      padding: 10px 14px;
+      border-radius: 12px;
+      max-width: 240px;
+      font-size: 11px;
+      text-align: center;
+      z-index: 80;
+      transition: all 0.25s ease;
+      pointer-events: none;
+    }
+
+    .floating-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .progress-bar {
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      height: 8px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .pill-live { background: rgba(34, 211, 238, 0.12); color: #67e8f9; border: 1px solid rgba(34, 211, 238, 0.2); }
+    .pill-upcoming { background: rgba(251, 191, 36, 0.12); color: #fcd34d; border: 1px solid rgba(251, 191, 36, 0.2); }
+    .pill-locked { background: rgba(148, 163, 184, 0.08); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.12); }
+    .pill-success { background: rgba(52, 211, 153, 0.12); color: #6ee7b7; border: 1px solid rgba(52, 211, 153, 0.2); }
+
+    .metric-card {
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(148,163,184,0.12);
+      border-radius: 14px;
+      padding: 12px 10px;
+    }
+
+    .tiny { font-size: 10px; }
+    .mini { font-size: 9px; }
+    .divider { border-top: 1px solid rgba(148,163,184,0.12); }
 
     .bottom-nav {
       position: fixed;
@@ -46,3 +205,748 @@
       color: #dff9ff;
       box-shadow: inset 0 0 0 1px rgba(34, 211, 238, 0.2);
     }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div id="toast" class="floating-toast">Wiadomość</div>
+
+  <main class="max-w-md mx-auto w-full min-h-screen bg-[#080b14] flex flex-col relative pb-24 border-x border-slate-900/60 shadow-2xl">
+    <header class="sticky top-0 z-30 flex items-center justify-between px-4 py-3 bg-[#080b14]/90 backdrop-blur-xl border-b border-slate-800/80">
+      <div class="flex items-center gap-3">
+        <button onclick="app.switchScreen('overview')" class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 via-indigo-600 to-cyan-400 p-[1.5px] transition active:scale-95 shadow-lg shadow-violet-500/50">
+          <div id="header-avatar" class="w-full h-full bg-[#080b14] rounded-[10.5px] flex items-center justify-center text-lg font-black text-transparent bg-clip-text bg-gradient-to-tr from-violet-400 to-cyan-300">Z</div>
+        </button>
+        <div>
+          <p class="text-[9px] uppercase tracking-[0.25em] text-cyan-400 font-bold">TechnixPro</p>
+          <h1 id="header-title" class="text-base font-bold text-white tracking-wide">Przegląd</h1>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 muted">
+        <button onclick="app.switchScreen('overview')" class="w-9 h-9 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-center hover:text-white transition active:scale-95">
+          <span id="stars-header" class="text-xs font-bold text-cyan-400">0⭐</span>
+        </button>
+      </div>
+    </header>
+
+    <nav class="sticky top-[65px] z-20 flex gap-1 bg-[#080b14]/95 backdrop-blur-md border-b border-slate-800/80 px-2 py-2 overflow-x-auto scroll-none">
+      <button data-screen="overview" class="nav-btn active flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition active:scale-95">
+        <i class="fa-solid fa-chart-line text-lg"></i>
+        <span class="text-[9px] font-bold">Przegląd</span>
+      </button>
+      <button data-screen="event-live" class="nav-btn flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition active:scale-95">
+        <i class="fa-solid fa-signal text-lg"></i>
+        <span class="text-[9px] font-bold">Event Live</span>
+      </button>
+      <button data-screen="tasks" class="nav-btn flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition active:scale-95">
+        <i class="fa-solid fa-list-check text-lg"></i>
+        <span class="text-[9px] font-bold">Zadania</span>
+      </button>
+      <button data-screen="referral" class="nav-btn flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition active:scale-95">
+        <i class="fa-solid fa-user-plus text-lg"></i>
+        <span class="text-[9px] font-bold">Referral</span>
+      </button>
+      <button data-screen="rewards" class="nav-btn flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition active:scale-95">
+        <i class="fa-solid fa-gift text-lg"></i>
+        <span class="text-[9px] font-bold">Nagrody</span>
+      </button>
+      <button data-screen="ranking" class="nav-btn flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition active:scale-95">
+        <i class="fa-solid fa-trophy text-lg"></i>
+        <span class="text-[9px] font-bold">Ranking</span>
+      </button>
+      <button data-screen="history" class="nav-btn flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition active:scale-95">
+        <i class="fa-solid fa-clock-rotate-left text-lg"></i>
+        <span class="text-[9px] font-bold">Historia</span>
+      </button>
+      <button data-screen="ranks" class="nav-btn flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition active:scale-95">
+        <i class="fa-solid fa-award text-lg"></i>
+        <span class="text-[9px] font-bold">Rangi</span>
+      </button>
+    </nav>
+
+    <div id="app-content" class="p-4 space-y-4 flex-1 overflow-y-auto scroll-none">
+      <section id="screen-overview" class="screen space-y-4">
+        <div class="panel p-4 space-y-3">
+          <div class="flex justify-between items-start">
+            <div>
+              <p class="tiny uppercase tracking-[0.25em] text-cyan-400 font-bold">Status profilu</p>
+              <h2 class="text-xl font-black text-white mt-1">Twój profil społeczności</h2>
+            </div>
+            <span id="overview-rank-badge" class="pill pill-success">Starter</span>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2">
+            <div class="metric-card text-center">
+              <div id="overview-stars" class="text-xl font-black text-cyan-400">0</div>
+              <div class="tiny text-slate-400">⭐</div>
+            </div>
+            <div class="metric-card text-center">
+              <div id="overview-level" class="text-xl font-black text-violet-400">1</div>
+              <div class="tiny text-slate-400">Poziom</div>
+            </div>
+            <div class="metric-card text-center">
+              <div id="overview-streak" class="text-xl font-black text-emerald-400">0</div>
+              <div class="tiny text-slate-400">Dni</div>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <div class="flex justify-between text-[10px] muted">
+              <span>Postęp do następnego poziomu</span>
+              <span id="overview-progress-text">0 / 1500 ⭐</span>
+            </div>
+            <div class="progress-bar">
+              <div id="overview-progress-bar" class="h-full bg-gradient-to-r from-violet-500 to-cyan-400" style="width:0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel p-4 space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-white">Aktywność społeczności</h3>
+            <span class="pill pill-live">Live</span>
+          </div>
+          <div id="overview-activity" class="space-y-2"></div>
+        </div>
+
+        <div class="panel p-4 space-y-3">
+          <h3 class="text-sm font-bold text-white">Najbliższe wydarzenia</h3>
+          <div id="overview-events" class="space-y-2"></div>
+        </div>
+      </section>
+
+      <section id="screen-event-live" class="screen hidden space-y-4">
+        <div class="panel p-4 space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="tiny uppercase tracking-[0.25em] text-cyan-400 font-bold">Event Hub</p>
+              <h2 class="text-lg font-bold text-white">Event Live</h2>
+            </div>
+            <span class="pill pill-live">On Air</span>
+          </div>
+        </div>
+
+        <div id="event-live-list" class="space-y-3"></div>
+      </section>
+
+      <section id="screen-tasks" class="screen hidden space-y-4">
+        <div class="panel p-4 space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="tiny uppercase tracking-[0.25em] text-cyan-400 font-bold">Misje</p>
+              <h2 class="text-lg font-bold text-white">Zadania</h2>
+            </div>
+            <span id="tasks-completed-badge" class="pill pill-success">0/0</span>
+          </div>
+          <p class="text-xs muted">Ukończ zadania, zdobywaj punkty i rozwijaj status w społeczności.</p>
+        </div>
+        <div id="tasks-list" class="space-y-3"></div>
+      </section>
+
+      <section id="screen-referral" class="screen hidden space-y-4">
+        <div class="panel p-4 space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="tiny uppercase tracking-[0.25em] text-cyan-400 font-bold">Zaproszenia</p>
+              <h2 class="text-lg font-bold text-white">Referral</h2>
+            </div>
+            <span class="pill pill-success">+10% bonus</span>
+          </div>
+
+          <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-3">
+            <div class="text-[10px] muted mb-2">Twój kod polecenia</div>
+            <div class="flex gap-2 items-center">
+              <input id="ref-link" readonly class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200" value="" />
+              <button onclick="app.copyReferralLink()" class="bg-cyan-500 text-slate-950 font-bold text-xs px-3 py-2 rounded-xl">Kopiuj</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2">
+            <div class="metric-card text-center">
+              <div id="ref-friends" class="text-lg font-black text-cyan-400">0</div>
+              <div class="tiny text-slate-400">Zaproszeń</div>
+            </div>
+            <div class="metric-card text-center">
+              <div id="ref-earnings" class="text-lg font-black text-violet-400">0</div>
+              <div class="tiny text-slate-400">⭐</div>
+            </div>
+            <div class="metric-card text-center">
+              <div id="ref-ctr" class="text-lg font-black text-emerald-400">0%</div>
+              <div class="tiny text-slate-400">CTR</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel p-4 space-y-3">
+          <h3 class="text-sm font-bold text-white">Oto jak to działa</h3>
+          <div id="ref-steps" class="space-y-2"></div>
+        </div>
+      </section>
+
+      <section id="screen-rewards" class="screen hidden space-y-4">
+        <div class="panel p-4 space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="tiny uppercase tracking-[0.25em] text-cyan-400 font-bold">Bonusy</p>
+              <h2 class="text-lg font-bold text-white">Nagrody</h2>
+            </div>
+            <span class="pill pill-upcoming">Dostępne</span>
+          </div>
+        </div>
+        <div id="rewards-list" class="space-y-3"></div>
+      </section>
+
+      <section id="screen-ranking" class="screen hidden space-y-4">
+        <div class="panel p-4 space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="tiny uppercase tracking-[0.25em] text-cyan-400 font-bold">Leaderboard</p>
+              <h2 class="text-lg font-bold text-white">Ranking</h2>
+            </div>
+            <span class="pill pill-live">Tydzień</span>
+          </div>
+        </div>
+        <div id="ranking-list" class="space-y-2"></div>
+      </section>
+
+      <section id="screen-history" class="screen hidden space-y-4">
+        <div class="panel p-4 space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="tiny uppercase tracking-[0.25em] text-cyan-400 font-bold">Historia</p>
+              <h2 class="text-lg font-bold text-white">Ostatnie aktywności</h2>
+            </div>
+            <span class="pill pill-upcoming">Zaktualizowano</span>
+          </div>
+        </div>
+        <div id="history-list" class="space-y-3"></div>
+      </section>
+
+      <section id="screen-ranks" class="screen hidden space-y-4">
+        <div class="panel p-4 space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="tiny uppercase tracking-[0.25em] text-cyan-400 font-bold">System</p>
+              <h2 class="text-lg font-bold text-white">Rangi</h2>
+            </div>
+            <span class="pill pill-success">Aktywny</span>
+          </div>
+        </div>
+        <div id="ranks-list" class="space-y-3"></div>
+      </section>
+    </div>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Bottom navigation">
+    <button class="bottom-nav-btn active" data-screen="overview">
+      <i class="fa-solid fa-house"></i>
+      <span>Home</span>
+    </button>
+    <button class="bottom-nav-btn" data-screen="event-live">
+      <i class="fa-solid fa-rocket"></i>
+      <span>TechnixPro</span>
+    </button>
+    <button class="bottom-nav-btn" data-screen="rewards">
+      <i class="fa-solid fa-gift"></i>
+      <span>Bonusy</span>
+    </button>
+    <button class="bottom-nav-btn" data-screen="tasks">
+      <i class="fa-solid fa-user"></i>
+      <span>Profil</span>
+    </button>
+    <button class="bottom-nav-btn" data-screen="ranks">
+      <i class="fa-solid fa-bars"></i>
+      <span>Menu</span>
+    </button>
+  </nav>
+
+  <script>
+    const app = {
+      user: {
+        id: 248910,
+        username: 'demo_user',
+        first_name: 'Demo',
+        is_admin: false,
+        role: 'member'
+      },
+
+      state: {
+        stars: 1280,
+        level: 4,
+        streakDays: 12,
+        tasksCompleted: 6,
+        referralFriends: 18,
+        referralEarnings: 340,
+        activity: 86,
+        rank: 'Starter',
+        eventsJoined: 2,
+        history: [],
+        tasks: [],
+        rewards: [],
+        leaderboard: [],
+        ranks: [],
+        events: []
+      },
+
+      init() {
+        this.loadData();
+        this.seed();
+        this.syncRank();
+        this.bindNavigation();
+        this.renderAll();
+      },
+
+      bindNavigation() {
+        document.querySelectorAll('.nav-btn, .bottom-nav-btn').forEach(btn => {
+          btn.addEventListener('click', () => this.switchScreen(btn.dataset.screen));
+        });
+      },
+
+      seed() {
+        this.state.tasks = [
+          { id: 'daily-checkin', title: 'Dzienne logowanie', description: 'Wejdź do aplikacji i potwierdź aktywność', reward: 25, progress: 1, target: 1, type: 'daily', category: 'Daily', completed: true },
+          { id: 'invite-friend', title: 'Zaproś znajomego', description: 'Udostępnij kod polecenia i zarejestruj 1 osobę', reward: 120, progress: 1, target: 1, type: 'referral', category: 'Referral', completed: true },
+          { id: 'event-participation', title: 'Weź udział w wydarzeniu', description: 'Dołącz do Event Live i aktywnie uczestnicz', reward: 80, progress: 2, target: 3, type: 'event', category: 'Community', completed: false },
+          { id: 'community-post', title: 'Zaangażuj się w społeczność', description: 'Dodaj komentarz lub udział w dyskusji', reward: 60, progress: 0, target: 1, type: 'social', category: 'Social', completed: false },
+          { id: 'wallet-connect', title: 'Połącz portfel', description: 'Podłącz Tonkeeper lub inny portfel', reward: 75, progress: 1, target: 1, type: 'wallet', category: 'Wallet', completed: true },
+          { id: 'streak-7', title: '7-dniowa seria', description: 'Utrzymuj aktywność przez 7 kolejnych dni', reward: 150, progress: 4, target: 7, type: 'streak', category: 'Streak', completed: false }
+        ];
+
+        this.state.rewards = [
+          { id: 'badge-elite', title: 'Profil Elite', description: 'Układ profilu premium z efektem neon', reward: 250, unlocked: true, badge: 'Premium', icon: 'fa-solid fa-vr-cardboard' },
+          { id: 'avatar-spark', title: 'Avatar Spark', description: 'Kolorowy avatar z animacją aktywności', reward: 420, unlocked: false, badge: 'Avatar', icon: 'fa-solid fa-sparkles' },
+          { id: 'boost-1', title: 'Boost XP x2', description: 'Dodatkowy multiplier poziomów na 7 dni', reward: 560, unlocked: false, badge: 'Boost', icon: 'fa-solid fa-rocket' },
+          { id: 'community-kit', title: 'Community Kit', description: 'Zestaw perków społecznościowych', reward: 780, unlocked: false, badge: 'Ograniczone', icon: 'fa-solid fa-shield-heart' }
+        ];
+
+        this.state.events = [
+          {
+            id: 'event-01',
+            title: 'Community Sprint',
+            description: 'Aktywne zadania z bonusami szybkości i rozwoju społeczności.',
+            status: 'live',
+            timeLeft: '03:18:29',
+            participants: 1214,
+            progress: 78,
+            reward: '120 ⭐',
+            accent: 'from-cyan-500 to-violet-500'
+          },
+          {
+            id: 'event-02',
+            title: 'Referral Rush',
+            description: 'Zaproś nowych użytkowników i zdobywaj bonusy za każdy poziom.',
+            status: 'live',
+            timeLeft: '06:44:10',
+            participants: 892,
+            progress: 64,
+            reward: '150 ⭐',
+            accent: 'from-violet-500 to-pink-500'
+          },
+          {
+            id: 'event-03',
+            title: 'Weekend Boost',
+            description: 'Bonusowe środy i wydłużone nagrody za każdą aktywność.',
+            status: 'upcoming',
+            timeLeft: '19:12:00',
+            participants: 640,
+            progress: 41,
+            reward: '200 ⭐',
+            accent: 'from-amber-400 to-emerald-500'
+          }
+        ];
+
+        this.state.leaderboard = [
+          { rank: 1, name: '@nora_tech', stars: 6420, level: 18, badge: 'Legend' },
+          { rank: 2, name: '@tomax', stars: 5890, level: 16, badge: 'Elite' },
+          { rank: 3, name: '@luna9', stars: 5220, level: 15, badge: 'Elite' },
+          { rank: 4, name: '@demo_user', stars: 1280, level: 4, badge: 'Starter' },
+          { rank: 5, name: '@michal', stars: 1180, level: 4, badge: 'Starter' }
+        ];
+
+        this.state.ranks = [
+          { name: 'Starter', min: 0, max: 1499, color: 'text-cyan-400', icon: 'fa-solid fa-seedling', description: 'Rozpoczęcie w społeczności' },
+          { name: 'Explorer', min: 1500, max: 2999, color: 'text-violet-400', icon: 'fa-solid fa-compass', description: 'Aktywny uczestnik i pierwsze sukcesy' },
+          { name: 'Elite', min: 3000, max: 5999, color: 'text-pink-400', icon: 'fa-solid fa-crown', description: 'Użytkownik z realnym wpływem' },
+          { name: 'Legend', min: 6000, max: 9999, color: 'text-amber-400', icon: 'fa-solid fa-medal', description: 'Mistrz społeczności i lider' }
+        ];
+
+        this.state.history = [
+          { type: 'bonus', title: 'Bonus dzienny', value: '+25 ⭐', time: '2 godziny temu' },
+          { type: 'mission', title: 'Zadanie: Zaproś znajomego', value: '+120 ⭐', time: 'Dziś, 09:12' },
+          { type: 'event', title: 'Udział w Community Sprint', value: '+80 ⭐', time: 'Wczoraj' },
+          { type: 'reward', title: 'Odebrano: Profil Elite', value: 'Prywatny perk', time: '3 dni temu' },
+          { type: 'wallet', title: 'Zamiana na TON', value: '-320 ⭐', time: '1 tydzień temu' }
+        ];
+      },
+
+      syncRank() {
+        const rank = this.state.ranks.find(r => this.state.stars >= r.min && this.state.stars <= r.max);
+        this.state.rank = rank ? rank.name : this.state.rank;
+        this.state.level = Math.max(1, Math.floor(this.state.stars / 1500) + 1);
+      },
+
+      switchScreen(screen) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+        const target = document.getElementById(`screen-${screen}`);
+        if (target) target.classList.remove('hidden');
+
+        document.querySelectorAll('.nav-btn, .bottom-nav-btn').forEach(btn => btn.classList.remove('active'));
+        const activeTop = document.querySelector(`.nav-btn[data-screen="${screen}"]`);
+        const activeBottom = document.querySelector(`.bottom-nav-btn[data-screen="${screen}"]`);
+        if (activeTop) activeTop.classList.add('active');
+        if (activeBottom) activeBottom.classList.add('active');
+
+        const labels = {
+          overview: 'Przegląd',
+          'event-live': 'Event Live',
+          tasks: 'Zadania',
+          referral: 'Referral',
+          rewards: 'Nagrody',
+          ranking: 'Ranking',
+          history: 'Historia',
+          ranks: 'Rangi'
+        };
+
+        document.getElementById('header-title').textContent = labels[screen] || 'Przegląd';
+      },
+
+      renderOverview() {
+        const nextLevel = this.state.level * 1500;
+        const progress = ((this.state.stars % 1500) / 1500) * 100;
+        document.getElementById('overview-stars').textContent = this.state.stars;
+        document.getElementById('overview-level').textContent = this.state.level;
+        document.getElementById('overview-streak').textContent = this.state.streakDays;
+        document.getElementById('overview-progress-text').textContent = `${this.state.stars} / ${nextLevel} ⭐`;
+        document.getElementById('overview-progress-bar').style.width = `${Math.min(progress, 100)}%`;
+        document.getElementById('overview-rank-badge').textContent = this.state.rank;
+
+        const activity = [
+          { label: 'Aktywność', value: `${this.state.activity}%`, color: 'bg-cyan-400' },
+          { label: 'Eventy', value: `${this.state.eventsJoined} / 5`, color: 'bg-violet-400' },
+          { label: 'Zadania', value: `${this.state.tasksCompleted} / 12`, color: 'bg-emerald-400' }
+        ];
+
+        document.getElementById('overview-activity').innerHTML = activity.map(item => {
+          const numeric = item.label === 'Aktywność' ? this.state.activity : (
+            item.value.includes('/') ? Math.min((parseInt(item.value.split('/')[0]) / parseInt(item.value.split('/')[1])) * 100, 100) : 0
+          );
+          return `
+            <div class="space-y-1">
+              <div class="flex justify-between text-[10px] muted">
+                <span>${item.label}</span>
+                <span>${item.value}</span>
+              </div>
+              <div class="progress-bar">
+                <div class="h-full ${item.color} rounded-full" style="width:${numeric}%"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        const nextEvents = this.state.events.slice(0, 3);
+        document.getElementById('overview-events').innerHTML = nextEvents.map(event => `
+          <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-3">
+            <div class="flex justify-between items-center gap-2">
+              <strong class="text-xs text-white">${event.title}</strong>
+              <span class="pill ${event.status === 'live' ? 'pill-live' : 'pill-upcoming'}">${event.status === 'live' ? 'LIVE' : 'Soon'}</span>
+            </div>
+            <div class="mt-2 flex justify-between text-[10px] muted">
+              <span>${event.participants} uczestników</span>
+              <span>${event.timeLeft}</span>
+            </div>
+          </div>
+        `).join('');
+      },
+
+      renderEventLive() {
+        const list = document.getElementById('event-live-list');
+        list.innerHTML = this.state.events.map(event => `
+          <div class="panel p-4 space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-sm font-bold text-white">${event.title}</h3>
+                <p class="text-[10px] muted mt-1">${event.description}</p>
+              </div>
+              <span class="pill ${event.status === 'live' ? 'pill-live' : 'pill-upcoming'}">${event.status === 'live' ? 'Live' : 'Wkrótce'}</span>
+            </div>
+
+            <div class="bg-gradient-to-r ${event.accent} rounded-2xl p-3 text-white">
+              <div class="flex justify-between text-[10px] font-semibold uppercase tracking-[0.2em] opacity-90">
+                <span>Reward</span>
+                <span>${event.timeLeft}</span>
+              </div>
+              <div class="mt-2 text-2xl font-black">${event.reward}</div>
+            </div>
+
+            <div class="space-y-2">
+              <div class="flex justify-between text-[10px] muted">
+                <span>Uczestnicy</span>
+                <span>${event.participants}</span>
+              </div>
+              <div class="progress-bar">
+                <div class="h-full bg-gradient-to-r from-cyan-500 to-violet-500 rounded-full" style="width:${event.progress}%"></div>
+              </div>
+            </div>
+
+            <button onclick="app.joinEvent('${event.id}')" class="w-full rounded-xl ${event.status === 'live' ? 'bg-gradient-to-r from-cyan-500 to-violet-500' : 'bg-slate-700'} text-white text-xs font-bold py-2 transition active:scale-95">
+              ${event.status === 'live' ? 'Dołącz teraz' : 'Zarezerwuj udział'}
+            </button>
+          </div>
+        `).join('');
+      },
+
+      renderTasks() {
+        const total = this.state.tasks.length;
+        const completed = this.state.tasks.filter(task => task.completed).length;
+        document.getElementById('tasks-completed-badge').textContent = `${completed}/${total}`;
+
+        const list = document.getElementById('tasks-list');
+        list.innerHTML = this.state.tasks.map(task => {
+          const done = task.completed || task.progress >= task.target;
+          const width = Math.min((task.progress / task.target) * 100, 100);
+          return `
+            <div class="panel p-4 space-y-2 ${done ? 'opacity-90' : ''}">
+              <div class="flex justify-between items-start gap-3">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <h3 class="text-sm font-bold text-white">${task.title}</h3>
+                    <span class="pill ${done ? 'pill-success' : 'pill-locked'}">${task.category}</span>
+                  </div>
+                  <p class="text-[10px] muted mt-1">${task.description}</p>
+                </div>
+                <span class="text-sm font-bold text-emerald-400">+${task.reward}⭐</span>
+              </div>
+
+              <div class="progress-bar">
+                <div class="h-full bg-gradient-to-r from-emerald-500 to-teal-400" style="width:${width}%"></div>
+              </div>
+
+              <div class="flex justify-between items-center text-[10px] muted">
+                <span>${task.progress} / ${task.target}</span>
+                <button onclick="app.claimTask('${task.id}')" class="px-3 py-1.5 rounded-lg ${done ? 'bg-emerald-600 text-white font-semibold' : 'bg-slate-700 text-slate-400'}">
+                  ${done ? 'Odebrano' : 'Wykonaj'}
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      },
+
+      renderReferral() {
+        document.getElementById('ref-link').value = `https://t.me/TechnixProBot?start=ref_${this.user.id}`;
+        document.getElementById('ref-friends').textContent = this.state.referralFriends;
+        document.getElementById('ref-earnings').textContent = this.state.referralEarnings;
+        document.getElementById('ref-ctr').textContent = `${Math.min((this.state.referralFriends / 50) * 100, 100).toFixed(0)}%`;
+
+        const steps = [
+          'Udostępnij swój unikalny link w Telegramie, Discordzie i społecznościach.',
+          'Każdy aktywny użytkownik może wejść po linku i potwierdzić rejestrację.',
+          'Otrzymujesz bonus za aktywność oraz za kolejny poziom zaproszonego użytkownika.'
+        ];
+
+        document.getElementById('ref-steps').innerHTML = steps.map((step, index) => `
+          <div class="flex gap-3 items-start bg-slate-900/60 border border-slate-800 rounded-xl p-3">
+            <div class="w-6 h-6 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 text-[10px] font-bold flex items-center justify-center text-slate-950">${index + 1}</div>
+            <p class="text-xs text-slate-200">${step}</p>
+          </div>
+        `).join('');
+      },
+
+      renderRewards() {
+        const list = document.getElementById('rewards-list');
+        list.innerHTML = this.state.rewards.map(reward => `
+          <div class="panel p-4 space-y-3 ${reward.unlocked ? 'border-emerald-500/30' : ''}">
+            <div class="flex justify-between items-start">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500/25 to-cyan-500/25 border border-slate-700 flex items-center justify-center">
+                  <i class="${reward.icon} text-cyan-300"></i>
+                </div>
+                <div>
+                  <h3 class="text-sm font-bold text-white">${reward.title}</h3>
+                  <p class="text-[10px] muted">${reward.description}</p>
+                </div>
+              </div>
+              <span class="pill ${reward.unlocked ? 'pill-success' : 'pill-locked'}">${reward.unlocked ? 'Odebrane' : reward.badge}</span>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <div class="text-sm font-black text-violet-400">${reward.reward} ⭐</div>
+              <button onclick="app.claimReward('${reward.id}')" class="px-3 py-1.5 rounded-lg ${reward.unlocked ? 'bg-emerald-600 text-white' : 'bg-violet-600 text-white'}">
+                ${reward.unlocked ? 'Zobacz' : 'Odbierz'}
+              </button>
+            </div>
+          </div>
+        `).join('');
+      },
+
+      renderRanking() {
+        const list = document.getElementById('ranking-list');
+        list.innerHTML = this.state.leaderboard.map(entry => `
+          <div class="panel p-3 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-cyan-400 text-[10px] font-black flex items-center justify-center text-white">#${entry.rank}</div>
+              <div>
+                <div class="text-sm font-bold text-white">${entry.name}</div>
+                <div class="text-[10px] muted">${entry.badge} • Level ${entry.level}</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-sm font-black text-cyan-400">${entry.stars}</div>
+              <div class="text-[10px] muted">⭐</div>
+            </div>
+          </div>
+        `).join('');
+      },
+
+      renderHistory() {
+        const list = document.getElementById('history-list');
+        list.innerHTML = this.state.history.map(item => `
+          <div class="panel p-3 flex items-start gap-3">
+            <div class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center">
+              <i class="${item.type === 'bonus' ? 'fa-solid fa-sparkles text-cyan-400' : item.type === 'mission' ? 'fa-solid fa-check text-emerald-400' : item.type === 'event' ? 'fa-solid fa-calendar text-violet-400' : item.type === 'reward' ? 'fa-solid fa-gift text-pink-400' : 'fa-solid fa-wallet text-amber-400'}"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-start gap-2">
+                <div class="text-sm font-bold text-white">${item.title}</div>
+                <div class="text-xs font-bold text-emerald-400">${item.value}</div>
+              </div>
+              <div class="text-[10px] muted mt-1">${item.time}</div>
+            </div>
+          </div>
+        `).join('');
+      },
+
+      renderRanks() {
+        const list = document.getElementById('ranks-list');
+        list.innerHTML = this.state.ranks.map(rank => {
+          const current = this.state.stars >= rank.min && this.state.stars <= rank.max;
+          return `
+            <div class="panel p-4 ${current ? 'border-violet-500/40 ring-1 ring-violet-500/30' : ''}">
+              <div class="flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center">
+                    <i class="${rank.icon} ${rank.color}"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm font-bold text-white">${rank.name}</div>
+                    <div class="text-[10px] muted">${rank.description}</div>
+                  </div>
+                </div>
+                <span class="pill ${current ? 'pill-success' : 'pill-locked'}">${current ? 'Aktualna' : `${rank.min}–${rank.max}`}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      },
+
+      renderAll() {
+        this.syncRank();
+        this.renderOverview();
+        this.renderEventLive();
+        this.renderTasks();
+        this.renderReferral();
+        this.renderRewards();
+        this.renderRanking();
+        this.renderHistory();
+        this.renderRanks();
+        document.getElementById('stars-header').textContent = `${this.state.stars}⭐`;
+      },
+
+      joinEvent(eventId) {
+        const event = this.state.events.find(item => item.id === eventId);
+        if (!event) return;
+        this.state.eventsJoined += 1;
+        this.state.stars += 20;
+        event.participants += 12;
+        this.state.history.unshift({ type: 'event', title: `Dołączono do ${event.title}`, value: '+20 ⭐', time: 'Teraz' });
+        this.showToast('✅ Dołączyłeś do wydarzenia!');
+        this.syncRank();
+        this.renderAll();
+        this.save();
+      },
+
+      claimTask(taskId) {
+        const task = this.state.tasks.find(item => item.id === taskId);
+        if (!task) return;
+
+        if (task.progress >= task.target || task.completed) {
+          if (!task.completed) {
+            task.completed = true;
+            this.state.stars += task.reward;
+            this.state.tasksCompleted += 1;
+            this.state.history.unshift({ type: 'mission', title: task.title, value: `+${task.reward} ⭐`, time: 'Teraz' });
+            this.showToast(`✅ Zadanie ukończone: ${task.title}`);
+          }
+          this.syncRank();
+          this.renderAll();
+          this.save();
+        }
+      },
+
+      claimReward(rewardId) {
+        const reward = this.state.rewards.find(item => item.id === rewardId);
+        if (!reward) return;
+
+        if (!reward.unlocked) {
+          reward.unlocked = true;
+          this.state.history.unshift({ type: 'reward', title: `Odebrano: ${reward.title}`, value: reward.badge, time: 'Teraz' });
+          this.showToast(`✅ Odebrano nagrodę: ${reward.title}`);
+        } else {
+          this.showToast(`ℹ️ ${reward.title} jest już aktywne.`);
+        }
+        this.syncRank();
+        this.renderAll();
+        this.save();
+      },
+
+      copyReferralLink() {
+        const link = document.getElementById('ref-link').value;
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(link).then(() => this.showToast('✅ Link polecenia skopiowany!'));
+        } else {
+          this.showToast('⚠️ Kopiowanie nie jest dostępne w tej przeglądarce.');
+        }
+      },
+
+      showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.classList.add('show');
+        clearTimeout(this.toastTimer);
+        this.toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+      },
+
+      save() {
+        localStorage.setItem('technixpro_community_state', JSON.stringify(this.state));
+      },
+
+      loadData() {
+        try {
+          const saved = localStorage.getItem('technixpro_community_state');
+          if (!saved) return;
+          const parsed = JSON.parse(saved);
+          this.state = { ...this.state, ...parsed };
+        } catch (error) {
+          console.warn('Brak zapisanego stanu lub błąd odczytu:', error);
+        }
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      app.init();
+      setInterval(() => {
+        app.state.events.forEach(event => {
+          if (event.status === 'live') {
+            event.progress = Math.min(100, event.progress + 1);
+          }
+        });
+        app.renderEventLive();
+      }, 60000);
+    });
+  </script>
+</body>
+</html>
