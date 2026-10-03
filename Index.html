@@ -129,6 +129,65 @@
       transform: translateX(-50%) translateY(0);
     }
 
+    .admin-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.72);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+
+    .admin-modal.hidden {
+      display: none;
+    }
+
+    .admin-modal-card {
+      width: min(480px, 100%);
+      background: linear-gradient(180deg, rgba(15,23,42,0.96), rgba(15, 23, 42, 0.9));
+      border: 1px solid rgba(148,163,184,0.18);
+      border-radius: 22px;
+      box-shadow: 0 20px 55px rgba(0,0,0,0.4);
+      overflow: hidden;
+    }
+
+    .admin-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 18px;
+      border-bottom: 1px solid rgba(148,163,184,0.15);
+    }
+
+    .admin-modal-body {
+      padding: 16px 18px 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .admin-input {
+      width: 100%;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.18);
+      color: #f8fafc;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 12px;
+      outline: none;
+    }
+
+    .admin-input:focus {
+      border-color: rgba(34,211,238,0.7);
+      box-shadow: 0 0 0 1px rgba(34,211,238,0.25);
+    }
+
+    .admin-table-scroll {
+      max-height: 240px;
+      overflow: auto;
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
@@ -148,6 +207,16 @@
 </head>
 <body>
   <div id="toast" class="floating-toast">Wiadomość</div>
+
+  <div id="admin-modal" class="admin-modal hidden">
+    <div class="admin-modal-card">
+      <div class="admin-modal-header">
+        <div id="admin-modal-title" class="font-bold text-white text-sm">Edytuj</div>
+        <button onclick="app.closeAdminModal()" class="text-slate-300 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="admin-modal-body" class="admin-modal-body"></div>
+    </div>
+  </div>
 
   <main class="max-w-md mx-auto w-full min-h-screen bg-[#080b14] flex flex-col relative pb-24 border-x border-slate-900/60 shadow-2xl">
     
@@ -188,6 +257,10 @@
       <button onclick="app.switchScreen('wallet')" class="nav-btn flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition active:scale-95">
         <i class="fa-solid fa-wallet text-lg"></i>
         <span class="text-[9px] font-bold">Portfel</span>
+      </button>
+      <button id="nav-admin-btn" onclick="app.switchScreen('admin')" class="nav-btn hidden flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition active:scale-95">
+        <i class="fa-solid fa-shield-halved text-lg"></i>
+        <span class="text-[9px] font-bold">Admin</span>
       </button>
       <button onclick="app.switchScreen('menu')" class="nav-btn flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition active:scale-95">
         <i class="fa-solid fa-bars text-lg"></i>
@@ -271,7 +344,7 @@
           </div>
 
           <div class="bg-gradient-to-b from-slate-800 to-slate-900 rounded-2xl p-6 flex flex-col items-center text-center border border-slate-700">
-            <div id="mining-click-zone" class="w-32 h-32 rounded-full bg-gradient-to-br from-cyan-500/20 to-violet-500/20 border-2 border-cyan-400 flex items-center justify-center cursor-pointer hover:from-cyan-500/30 hover:to-violet-500/30 transition active:scale-95">
+            <div id="mining-click-zone" class="w-32 h-32 rounded-full bg-gradient-to-br from-cyan-500/20 to-violet-500/20 border-2 border-cyan-400 flex items-center justify-center cursor-pointer hover:scale-105 transition active:scale-95">
               <span class="text-5xl font-black text-cyan-400">TP</span>
             </div>
             <p id="click-feedback" class="text-xs text-emerald-400 mt-4 min-h-[20px]"></p>
@@ -339,7 +412,7 @@
         <div class="panel p-4 space-y-3">
           <h3 class="text-sm font-bold text-white">Zamień ⭐ na TON</h3>
           <div class="flex gap-2">
-            <input id="stars-to-swap" type="number" placeholder="Ilość ⭐" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-violet-500" />
+            <input id="stars-to-swap" type="number" placeholder="Ilość ⭐" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500" />
             <button onclick="app.swapStarsToTon()" class="bg-gradient-to-r from-cyan-500 to-violet-500 text-white font-semibold text-xs px-4 py-2 rounded-xl transition active:scale-95">
               Zamień
             </button>
@@ -426,11 +499,73 @@
           <p class="text-[10px] text-slate-400">© 2026 — Integracja Telegram x TON</p>
         </div>
       </section>
+
+      <!-- ADMIN SCREEN -->
+      <section id="screen-admin" class="screen hidden space-y-4">
+        <div class="panel p-4 space-y-3">
+          <div class="flex justify-between items-center">
+            <div>
+              <p class="text-[9px] uppercase tracking-[0.25em] text-cyan-300 font-bold">Administrator</p>
+              <h2 class="text-lg font-bold text-white">Panel zarządzania</h2>
+            </div>
+            <div class="text-right">
+              <button onclick="app.reloadAdminData()" class="bg-slate-800 px-3 py-1 rounded-lg text-xs muted">Odśwież</button>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div class="bg-slate-900/80 rounded-xl p-4 border border-slate-800">
+              <div class="text-[10px] muted">Użytkownicy</div>
+              <div id="admin-users-count" class="text-2xl font-bold text-cyan-400">0</div>
+            </div>
+            <div class="bg-slate-900/80 rounded-xl p-4 border border-slate-800">
+              <div class="text-[10px] muted">Aktywne transakcje</div>
+              <div id="admin-tx-count" class="text-2xl font-bold text-violet-400">0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel p-4 space-y-3">
+          <h3 class="text-sm font-bold text-white">Zarządzanie użytkownikami</h3>
+          <div class="mb-2 flex gap-2">
+            <input id="admin-user-search" type="text" placeholder="Szukaj po ID / username / email" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500" />
+            <button onclick="app.adminSearchUsers()" class="bg-cyan-500 px-3 py-2 rounded-xl text-xs font-semibold text-slate-950">Szukaj</button>
+          </div>
+          <div id="admin-users-list" class="space-y-2 admin-table-scroll"></div>
+        </div>
+
+        <div class="panel p-4 space-y-3">
+          <h3 class="text-sm font-bold text-white">Zadania (Tasks)</h3>
+          <div id="admin-tasks-list" class="space-y-2 admin-table-scroll"></div>
+          <div class="flex gap-2 pt-2">
+            <button onclick="app.openNewTaskModal()" class="bg-violet-600 px-3 py-2 rounded-xl text-xs font-semibold">Nowe zadanie</button>
+            <button onclick="app.reloadAdminData()" class="bg-slate-800 px-3 py-2 rounded-xl text-xs muted">Odśwież</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div class="panel p-4 space-y-3">
+            <h3 class="text-sm font-bold text-white">Posty</h3>
+            <div id="admin-posts-list" class="space-y-2 admin-table-scroll"></div>
+            <button onclick="app.openNewPostModal()" class="bg-emerald-600 px-3 py-2 rounded-xl text-xs font-semibold w-full">Dodaj post</button>
+          </div>
+          <div class="panel p-4 space-y-3">
+            <h3 class="text-sm font-bold text-white">Transakcje / Portfele</h3>
+            <div id="admin-tx-list" class="space-y-2 admin-table-scroll"></div>
+            <div class="flex gap-2 pt-2">
+              <button onclick="app.adminExportCsv()" class="bg-emerald-600 px-3 py-2 rounded-xl text-xs font-semibold w-full">Eksport CSV</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel p-4 space-y-3">
+          <h3 class="text-sm font-bold text-white">Logi audytu</h3>
+          <div id="admin-logs" class="text-xs muted max-h-56 overflow-auto"></div>
+        </div>
+      </section>
     </div>
   </main>
 
   <script>
-    // ========== APP STATE & DATABASE ==========
     const app = {
       user: null,
       gameState: {
@@ -461,25 +596,30 @@
         { id: 2, author: 'Admin', text: '⭐ Zarabiaj poprzez klikanie i zadania', time: 'wczoraj' }
       ],
 
-      // ========== TELEGRAM INTEGRATION ==========
+      users: [],
+      transactions: [],
+      logs: [],
+
       initTelegram() {
         const tg = window.Telegram?.WebApp;
         if (!tg) {
           console.warn('Telegram WebApp SDK niedostępny');
-          this.user = { id: 123456, first_name: 'Demo', username: 'testuser' };
+          this.user = { id: 123456, first_name: 'Demo', username: 'testuser', is_admin: true, role: 'admin' };
+          this.gameState.referralCode = `ref_${this.user.id}`;
+          this.ensureAdminDataSeed();
           return;
         }
 
         tg.ready();
-        this.user = tg.initDataUnsafe?.user || { id: 123456, first_name: 'Demo', username: 'testuser' };
+        this.user = tg.initDataUnsafe?.user || { id: 123456, first_name: 'Demo', username: 'testuser', is_admin: true, role: 'admin' };
+        this.user.is_admin = true;
+        this.user.role = this.user.role || 'admin';
         this.gameState.referralCode = `ref_${this.user.id}`;
 
-        // Ustawienia
         tg.setHeaderColor('#080b14');
         tg.setBackgroundColor('#080b14');
         tg.enableClosingConfirmation();
 
-        // Obsługa płatności
         if (tg.onEvent) {
           tg.onEvent('invoiceClosed', (data) => {
             if (data.status === 'paid') {
@@ -487,30 +627,57 @@
             }
           });
         }
+
+        this.ensureAdminDataSeed();
       },
 
-      // ========== RENDERING ==========
+      ensureAdminDataSeed() {
+        if (!this.users.length) {
+          this.users = [
+            {
+              id: this.user?.id || 1,
+              username: this.user?.username || this.user?.first_name || 'demo_user',
+              email: 'admin@technixpro.app',
+              stars: this.gameState.stars,
+              level: this.gameState.level,
+              role: 'admin',
+              status: 'active',
+              createdAt: new Date().toISOString()
+            }
+          ];
+        }
+
+        if (!this.transactions.length) {
+          this.transactions = [
+            { id: 'tx_1', type: 'claim', userId: this.user?.id || 1, amount: 25, currency: '⭐', status: 'completed', timestamp: new Date().toISOString() },
+            { id: 'tx_2', type: 'wallet', userId: this.user?.id || 1, amount: 0.12, currency: 'TON', status: 'completed', timestamp: new Date().toISOString() }
+          ];
+        }
+
+        if (!this.logs.length) {
+          this.logs = [
+            { id: 'log_1', actor: 'system', action: 'system_initialized', timestamp: new Date().toISOString(), details: 'TechnixPro admin panel initialized' },
+            { id: 'log_2', actor: 'admin', action: 'daily_bonus_awarded', timestamp: new Date().toISOString(), details: 'Bonus został przyznany użytkownikowi' }
+          ];
+        }
+      },
+
       render() {
-        // Stars
         document.getElementById('stars-total').textContent = this.gameState.stars;
         document.getElementById('stars-header').textContent = `${this.gameState.stars}⭐`;
 
-        // Level
         document.getElementById('level-badge').textContent = `LEVEL ${this.gameState.level}`;
         document.getElementById('profile-level').textContent = this.gameState.level;
 
-        // Progress
         const nextLevelStars = this.gameState.level * 1500;
         const progress = (this.gameState.stars % 1500) / 1500 * 100;
         document.getElementById('level-progress-bar').style.width = progress + '%';
         document.getElementById('level-progress-text').textContent = `${this.gameState.stars} / ${nextLevelStars} ⭐`;
 
-        // Energy
         const energyPercent = (this.gameState.energy / this.gameState.maxEnergy) * 100;
         document.getElementById('energy-bar').style.width = energyPercent + '%';
         document.getElementById('energy-text').textContent = `${this.gameState.energy} / ${this.gameState.maxEnergy}`;
 
-        // Stats
         document.getElementById('streak-display').textContent = this.gameState.streakDays;
         document.getElementById('tasks-done').textContent = this.gameState.tasksCompleted;
         document.getElementById('total-mined').textContent = this.gameState.totalMined + ' ⭐';
@@ -518,32 +685,26 @@
         document.getElementById('profile-tasks').textContent = this.gameState.tasksCompleted;
         document.getElementById('profile-days').textContent = this.gameState.streakDays;
 
-        // Profil
-        const username = this.user.username || this.user.first_name || 'User';
+        const username = this.user?.username || this.user?.first_name || 'User';
         document.getElementById('header-title').textContent = username;
         document.getElementById('profile-name').textContent = '@' + username;
-        document.getElementById('profile-id').textContent = 'ID: ' + this.user.id;
+        document.getElementById('profile-id').textContent = 'ID: ' + (this.user?.id || 0);
         document.getElementById('ref-link').value = `https://t.me/TechnixProBot?start=${this.gameState.referralCode}`;
 
-        // Portfel
         if (this.gameState.walletConnected) {
-          document.getElementById('wallet-address').innerHTML = `<span class="block muted mb-1">Adres:</span><span>${this.gameState.walletAddress?.slice(0, 10)}...${this.gameState.walletAddress?.slice(-6)}</span>`;
+          document.getElementById('wallet-address').innerHTML = `<span class="block muted mb-1">Adres:</span><span>${this.gameState.walletAddress?.slice(0, 10)}...${this.gameState.walletAddress?.slice(-8)}</span>`;
           document.getElementById('wallet-status').textContent = '✅ Połączony';
           document.getElementById('wallet-status').className = 'text-emerald-400';
         }
         document.getElementById('wallet-balance').textContent = this.gameState.tonBalance.toFixed(2) + ' TON';
 
-        // Posty
         this.renderPosts();
-
-        // Zadania
         this.renderTasks();
-
-        // Mining
         this.updateMiningRate();
 
-        // Persist
         this.save();
+        this.ensureAdminUI();
+        this.renderAdmin();
       },
 
       renderPosts() {
@@ -587,25 +748,25 @@
       },
 
       updateMiningRate() {
-        const rate = this.gameState.level * 10 + (this.tasks[1].progress * 5);
+        const rate = this.gameState.level * 10 + (this.tasks[1]?.progress * 5 || 0);
         document.getElementById('mining-rate').textContent = `+${rate}⭐/h`;
       },
 
-      // ========== ACTIONS ==========
       switchScreen(screenName) {
         document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
         document.getElementById(`screen-${screenName}`)?.classList.remove('hidden');
 
         document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-        event?.target?.closest('.nav-btn')?.classList.add('active');
+        const activeBtn = document.querySelector(`.nav-btn[onclick*="switchScreen('${screenName}')"]`);
+        if (activeBtn) activeBtn.classList.add('active');
 
-        // Update header
         const titles = {
           home: 'Sieć społeczna',
           crypto: 'Mining',
           gift: 'Zadania',
           wallet: 'Portfel',
           profile: 'Profil',
+          admin: 'Administrator',
           menu: 'Menu'
         };
         document.getElementById('header-title').textContent = titles[screenName] || screenName;
@@ -617,11 +778,9 @@
           this.gameState.energy -= 1;
           this.gameState.totalMined += 1;
 
-          // Task tracking
           const clickTask = this.tasks.find(t => t.type === 'clicks');
           if (clickTask) clickTask.progress++;
 
-          // Feedback
           const feedback = document.getElementById('click-feedback');
           feedback.textContent = '+1 ⭐';
           setTimeout(() => feedback.textContent = '', 1000);
@@ -644,6 +803,13 @@
         this.gameState.stars += 25;
         this.gameState.lastDailyBonus = now.toISOString();
         this.gameState.streakDays++;
+
+        const userIndex = this.users.findIndex(u => u.id === this.user?.id);
+        if (userIndex >= 0) {
+          this.users[userIndex].stars = this.gameState.stars;
+        }
+
+        this.addLog('admin', 'daily_bonus_awarded', `Użytkownik ${this.user?.username || this.user?.first_name || 'demo'} odebrał bonus`);
         this.showToast('✅ Bonus dzienny odebrany! +25⭐');
         this.render();
       },
@@ -655,11 +821,13 @@
         this.gameState.stars += task.reward;
         this.gameState.tasksCompleted++;
 
-        // Level up
         if (this.gameState.stars >= this.gameState.level * 1500) {
           this.gameState.level++;
           this.showToast(`🎉 Nowy poziom! Jesteś na poziomie ${this.gameState.level}`);
         }
+
+        const userProfile = this.users.find(u => u.id === this.user?.id);
+        if (userProfile) userProfile.stars = this.gameState.stars;
 
         task.progress = 0;
         this.showToast(`✅ Zadanie zdobyte! +${task.reward}⭐`);
@@ -667,16 +835,22 @@
       },
 
       connectTonKeeper() {
-        const tg = window.Telegram?.WebApp;
-
-        // Symulacja w demo
         this.gameState.walletConnected = true;
         this.gameState.walletAddress = 'EQCX-MO34-XFQX-7Z3Q-7VKZQ-7X6QQ-7Z3Q-7VKZQ';
         this.gameState.tonBalance = 1.23;
 
-        // Task progress
         const walletTask = this.tasks.find(t => t.type === 'wallet');
         if (walletTask) walletTask.progress = 1;
+
+        this.transactions.push({
+          id: `tx_${Date.now()}`,
+          type: 'wallet_connect',
+          userId: this.user?.id || 1,
+          amount: 1.23,
+          currency: 'TON',
+          status: 'completed',
+          timestamp: new Date().toISOString()
+        });
 
         this.showToast('✅ TON Keeper połączony!');
         this.render();
@@ -706,6 +880,17 @@
         this.gameState.tonBalance += tonAmount;
         starsInput.value = '';
 
+        this.transactions.push({
+          id: `tx_${Date.now()}`,
+          type: 'swap',
+          userId: this.user?.id || 1,
+          amount: amount,
+          currency: '⭐',
+          status: 'completed',
+          timestamp: new Date().toISOString()
+        });
+
+        this.addLog('admin', 'stars_swapped', `Zamieniono ${amount}⭐ na ${tonAmount.toFixed(3)} TON`);
         this.showToast(`✅ Zamieniono ${amount}⭐ na ${tonAmount.toFixed(3)} TON`);
         this.render();
       },
@@ -737,12 +922,14 @@
         this.toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
       },
 
-      // ========== STORAGE ==========
       save() {
         localStorage.setItem('technixpro_save', JSON.stringify({
           gameState: this.gameState,
           tasks: this.tasks,
-          posts: this.posts
+          posts: this.posts,
+          users: this.users,
+          transactions: this.transactions,
+          logs: this.logs
         }));
       },
 
@@ -753,31 +940,400 @@
           this.gameState = { ...this.gameState, ...data.gameState };
           this.tasks = data.tasks || this.tasks;
           this.posts = data.posts || this.posts;
+          this.users = data.users || this.users;
+          this.transactions = data.transactions || this.transactions;
+          this.logs = data.logs || this.logs;
+        }
+        this.ensureAdminDataSeed();
+        if (this.user && this.users.length) {
+          const current = this.users.find(u => u.id === this.user.id);
+          if (current) {
+            this.gameState.stars = current.stars || this.gameState.stars;
+            this.gameState.level = current.level || this.gameState.level;
+          }
         }
       },
 
-      // ========== ENERGY REGEN ==========
       startEnergyRegen() {
         setInterval(() => {
           if (this.gameState.energy < this.gameState.maxEnergy) {
             this.gameState.energy += 1;
             this.render();
           }
-        }, 10000); // co 10 sekund
+        }, 10000);
+      },
+
+      isAdmin() {
+        return !!(this.user && (this.user.is_admin === true || this.user.role === 'admin' || (this.user.roles && this.user.roles.includes('admin'))));
+      },
+
+      ensureAdminUI() {
+        const navBtn = document.getElementById('nav-admin-btn');
+        if (navBtn) {
+          if (this.isAdmin()) navBtn.classList.remove('hidden');
+          else navBtn.classList.add('hidden');
+        }
+      },
+
+      addLog(actor, action, details) {
+        this.logs.unshift({
+          id: `log_${Date.now()}_${Math.random().toString(16).slice(2)}`,
+          actor,
+          action,
+          details,
+          timestamp: new Date().toISOString()
+        });
+        if (this.logs.length > 200) this.logs = this.logs.slice(0, 200);
+      },
+
+      reloadAdminData() {
+        this.renderAdmin();
+        this.showToast('✅ Dane administracyjne odświeżone');
+      },
+
+      renderAdmin() {
+        if (!this.isAdmin()) return;
+
+        const usersList = document.getElementById('admin-users-list');
+        const tasksList = document.getElementById('admin-tasks-list');
+        const postsList = document.getElementById('admin-posts-list');
+        const txList = document.getElementById('admin-tx-list');
+        const logsList = document.getElementById('admin-logs');
+
+        document.getElementById('admin-users-count').textContent = this.users.length;
+        document.getElementById('admin-tx-count').textContent = this.transactions.length;
+
+        const query = (document.getElementById('admin-user-search')?.value || '').trim().toLowerCase();
+        const filteredUsers = !query ? this.users : this.users.filter(u => {
+          return [String(u.id), u.username || '', u.email || '', u.role || ''].join(' ').toLowerCase().includes(query);
+        });
+
+        usersList.innerHTML = filteredUsers.map(u => `
+          <div class="bg-slate-900/50 rounded-xl p-3 border border-slate-800">
+            <div class="flex justify-between items-start gap-2">
+              <div>
+                <div class="text-sm font-bold text-white">${u.username || 'user'} <span class="text-[10px] text-slate-400">#${u.id}</span></div>
+                <div class="text-[11px] muted">${u.email || 'no-email'} • ${u.role || 'user'} • ${u.status || 'active'}</div>
+              </div>
+              <div class="text-right">
+                <div class="text-xs font-bold text-cyan-400">${u.stars || 0}⭐</div>
+                <div class="text-[10px] muted">lvl ${u.level || 1}</div>
+              </div>
+            </div>
+            <div class="flex gap-2 mt-3">
+              <button onclick="app.adminAdjustStars(${u.id}, 100)" class="px-2 py-1 rounded-lg bg-emerald-600 text-[10px] font-semibold">+100⭐</button>
+              <button onclick="app.adminAdjustStars(${u.id}, -50)" class="px-2 py-1 rounded-lg bg-amber-600 text-[10px] font-semibold">-50⭐</button>
+              <button onclick="app.adminToggleUserStatus(${u.id})" class="px-2 py-1 rounded-lg bg-slate-700 text-[10px] font-semibold">${u.status === 'active' ? 'Zablokuj' : 'Odblokuj'}</button>
+            </div>
+          </div>
+        `).join('') || '<div class="text-[11px] muted">Brak użytkowników według filtra.</div>';
+
+        tasksList.innerHTML = this.tasks.map(task => `
+          <div class="bg-slate-900/50 rounded-xl p-3 border border-slate-800">
+            <div class="flex justify-between items-center gap-2">
+              <div>
+                <div class="text-sm font-bold text-white">${task.title}</div>
+                <div class="text-[11px] muted">${task.description}</div>
+              </div>
+              <div class="text-right">
+                <div class="text-xs font-bold text-emerald-400">+${task.reward}⭐</div>
+                <div class="text-[10px] muted">${task.progress}/${task.target}</div>
+              </div>
+            </div>
+            <div class="flex gap-2 mt-3">
+              <button onclick="app.openEditTaskModal(${task.id})" class="px-2 py-1 rounded-lg bg-violet-600 text-[10px] font-semibold">Edytuj</button>
+              <button onclick="app.adminDeleteTask(${task.id})" class="px-2 py-1 rounded-lg bg-red-600 text-[10px] font-semibold">Usuń</button>
+            </div>
+          </div>
+        `).join('');
+
+        postsList.innerHTML = this.posts.map(post => `
+          <div class="bg-slate-900/50 rounded-xl p-3 border border-slate-800">
+            <div class="flex justify-between items-center">
+              <div class="text-sm font-bold text-cyan-400">${post.author}</div>
+              <div class="text-[10px] muted">${post.time}</div>
+            </div>
+            <div class="text-xs text-slate-200 mt-2">${post.text}</div>
+            <div class="flex gap-2 mt-3">
+              <button onclick="app.openEditPostModal(${post.id})" class="px-2 py-1 rounded-lg bg-slate-700 text-[10px] font-semibold">Edytuj</button>
+              <button onclick="app.adminDeletePost(${post.id})" class="px-2 py-1 rounded-lg bg-red-600 text-[10px] font-semibold">Usuń</button>
+            </div>
+          </div>
+        `).join('');
+
+        txList.innerHTML = this.transactions.slice(0, 8).map(tx => `
+          <div class="bg-slate-900/50 rounded-xl p-3 border border-slate-800">
+            <div class="flex justify-between items-center gap-2">
+              <div>
+                <div class="text-sm font-bold text-white">${tx.type}</div>
+                <div class="text-[10px] muted">#${tx.userId || 'system'} • ${tx.status}</div>
+              </div>
+              <div class="text-right">
+                <div class="text-xs font-bold ${tx.status === 'pending' ? 'text-amber-400' : 'text-emerald-400'}">${tx.amount} ${tx.currency}</div>
+                <div class="text-[10px] muted">${new Date(tx.timestamp).toLocaleString()}</div>
+              </div>
+            </div>
+            <div class="flex gap-2 mt-3">
+              ${tx.status === 'pending' ? `<button onclick="app.adminApproveTx('${tx.id}')" class="px-2 py-1 rounded-lg bg-emerald-600 text-[10px] font-semibold">Approve</button>` : ''}
+              <button onclick="app.adminRejectTx('${tx.id}')" class="px-2 py-1 rounded-lg bg-red-600 text-[10px] font-semibold">Reject</button>
+            </div>
+          </div>
+        `).join('') || '<div class="text-[11px] muted">Brak transakcji.</div>';
+
+        logsList.innerHTML = this.logs.slice(0, 12).map(log => `
+          <div class="py-1 border-b border-slate-800 text-[12px]">
+            <span class="text-cyan-400">${log.actor}</span> • ${log.action} • <span class="text-slate-300">${log.details}</span>
+            <div class="text-[10px] muted mt-1">${new Date(log.timestamp).toLocaleString()}</div>
+          </div>
+        `).join('');
+      },
+
+      adminSearchUsers() {
+        this.renderAdmin();
+      },
+
+      adminAdjustStars(userId, delta) {
+        const user = this.users.find(u => u.id === userId);
+        if (!user) return;
+        user.stars = Math.max(0, (user.stars || 0) + delta);
+        if (user.id === this.user?.id) {
+          this.gameState.stars = user.stars;
+        }
+        this.addLog('admin', 'stars_adjusted', `Użytkownik #${userId} dostal korektę ${delta}⭐`);
+        this.showToast(`✅ Zaktualizowano saldo użytkownika #${userId}`);
+        this.render();
+      },
+
+      adminToggleUserStatus(userId) {
+        const user = this.users.find(u => u.id === userId);
+        if (!user) return;
+        user.status = user.status === 'active' ? 'blocked' : 'active';
+        this.addLog('admin', 'user_status_toggled', `Użytkownik #${userId} -> ${user.status}`);
+        this.showToast(`✅ Status użytkownika #${userId}: ${user.status}`);
+        this.render();
+      },
+
+      adminDeleteTask(taskId) {
+        if (!confirm('Usunąć zadanie?')) return;
+        this.tasks = this.tasks.filter(t => t.id !== taskId);
+        this.addLog('admin', 'task_deleted', `Zadanie #${taskId} usunięte`);
+        this.showToast('✅ Zadanie usunięte');
+        this.render();
+      },
+
+      adminDeletePost(postId) {
+        if (!confirm('Usunąć post?')) return;
+        this.posts = this.posts.filter(p => p.id !== postId);
+        this.addLog('admin', 'post_deleted', `Post #${postId} usunięty`);
+        this.showToast('✅ Post usunięty');
+        this.render();
+      },
+
+      adminApproveTx(txId) {
+        const tx = this.transactions.find(t => t.id === txId);
+        if (!tx) return;
+        tx.status = 'completed';
+        this.addLog('admin', 'tx_approved', `Transakcja #${txId} zatwierdzona`);
+        this.showToast('✅ Transakcja zatwierdzona');
+        this.render();
+      },
+
+      adminRejectTx(txId) {
+        const tx = this.transactions.find(t => t.id === txId);
+        if (!tx) return;
+        tx.status = 'rejected';
+        this.addLog('admin', 'tx_rejected', `Transakcja #${txId} odrzucona`);
+        this.showToast('✅ Transakcja odrzucona');
+        this.render();
+      },
+
+      adminExportCsv() {
+        const rows = [
+          ['id', 'type', 'userId', 'amount', 'currency', 'status', 'timestamp'],
+          ...this.transactions.map(tx => [tx.id, tx.type, tx.userId, tx.amount, tx.currency, tx.status, tx.timestamp])
+        ];
+        const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = `technixpro_tx_export_${Date.now()}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        this.showToast('✅ CSV wyeksportowane');
+      },
+
+      openNewTaskModal() {
+        this.showAdminModal('Dodaj nowe zadanie', `
+          <input id="admin-task-id" type="hidden" value="0">
+          <input id="admin-task-title" class="admin-input" placeholder="Tytuł zadania" value="">
+          <input id="admin-task-description" class="admin-input" placeholder="Opis zadania" value="">
+          <div class="grid grid-cols-2 gap-2">
+            <input id="admin-task-reward" class="admin-input" type="number" placeholder="Nagroda ⭐" value="50">
+            <input id="admin-task-target" class="admin-input" type="number" placeholder="Cel" value="1">
+          </div>
+          <select id="admin-task-type" class="admin-input">
+            <option value="clicks">clicks</option>
+            <option value="referral">referral</option>
+            <option value="wallet">wallet</option>
+            <option value="stars">stars</option>
+            <option value="streak">streak</option>
+          </select>
+          <div class="flex gap-2 mt-2">
+            <button onclick="app.saveTaskFromModal()" class="flex-1 bg-violet-600 px-3 py-2 rounded-xl text-xs font-semibold">Zapisz</button>
+            <button onclick="app.closeAdminModal()" class="flex-1 bg-slate-700 px-3 py-2 rounded-xl text-xs font-semibold">Anuluj</button>
+          </div>
+        `);
+      },
+
+      openEditTaskModal(taskId) {
+        const task = this.tasks.find(t => t.id === taskId);
+        if (!task) return;
+        this.showAdminModal('Edytuj zadanie', `
+          <input id="admin-task-id" type="hidden" value="${task.id}">
+          <input id="admin-task-title" class="admin-input" placeholder="Tytuł zadania" value="${task.title.replace(/"/g, '&quot;')}">
+          <input id="admin-task-description" class="admin-input" placeholder="Opis zadania" value="${task.description.replace(/"/g, '&quot;')}">
+          <div class="grid grid-cols-2 gap-2">
+            <input id="admin-task-reward" class="admin-input" type="number" placeholder="Nagroda ⭐" value="${task.reward}">
+            <input id="admin-task-target" class="admin-input" type="number" placeholder="Cel" value="${task.target}">
+          </div>
+          <select id="admin-task-type" class="admin-input">
+            <option value="clicks" ${task.type === 'clicks' ? 'selected' : ''}>clicks</option>
+            <option value="referral" ${task.type === 'referral' ? 'selected' : ''}>referral</option>
+            <option value="wallet" ${task.type === 'wallet' ? 'selected' : ''}>wallet</option>
+            <option value="stars" ${task.type === 'stars' ? 'selected' : ''}>stars</option>
+            <option value="streak" ${task.type === 'streak' ? 'selected' : ''}>streak</option>
+          </select>
+          <div class="flex gap-2 mt-2">
+            <button onclick="app.saveTaskFromModal()" class="flex-1 bg-violet-600 px-3 py-2 rounded-xl text-xs font-semibold">Zapisz</button>
+            <button onclick="app.closeAdminModal()" class="flex-1 bg-slate-700 px-3 py-2 rounded-xl text-xs font-semibold">Anuluj</button>
+          </div>
+        `);
+      },
+
+      saveTaskFromModal() {
+        const id = Number(document.getElementById('admin-task-id').value || 0);
+        const title = document.getElementById('admin-task-title').value.trim();
+        const description = document.getElementById('admin-task-description').value.trim();
+        const reward = Number(document.getElementById('admin-task-reward').value || 0);
+        const target = Number(document.getElementById('admin-task-target').value || 1);
+        const type = document.getElementById('admin-task-type').value;
+
+        if (!title || !description) {
+          this.showToast('❌ Wypełnij tytuł i opis zadania');
+          return;
+        }
+
+        if (id && this.tasks.some(t => t.id === id)) {
+          const task = this.tasks.find(t => t.id === id);
+          task.title = title;
+          task.description = description;
+          task.reward = reward;
+          task.target = Math.max(1, target);
+          task.type = type;
+          task.progress = Math.min(task.progress || 0, task.target);
+          this.addLog('admin', 'task_updated', `Zadanie #${id} zaktualizowane`);
+        } else {
+          const maxId = this.tasks.reduce((m, t) => Math.max(m, Number(t.id) || 0), 0) || 0;
+          this.tasks.unshift({
+            id: maxId + 1,
+            title,
+            description,
+            reward,
+            type,
+            target: Math.max(1, target),
+            progress: 0
+          });
+          this.addLog('admin', 'task_created', `Utworzono zadanie ${title}`);
+        }
+
+        this.closeAdminModal();
+        this.showToast('✅ Zadanie zapisane');
+        this.render();
+      },
+
+      openNewPostModal() {
+        this.showAdminModal('Dodaj post', `
+          <input id="admin-post-id" type="hidden" value="0">
+          <input id="admin-post-author" class="admin-input" placeholder="Autor" value="Admin">
+          <textarea id="admin-post-text" class="admin-input" style="min-height:110px; resize:vertical;" placeholder="Treść posta"></textarea>
+          <div class="flex gap-2 mt-2">
+            <button onclick="app.savePostFromModal()" class="flex-1 bg-emerald-600 px-3 py-2 rounded-xl text-xs font-semibold">Zapisz</button>
+            <button onclick="app.closeAdminModal()" class="flex-1 bg-slate-700 px-3 py-2 rounded-xl text-xs font-semibold">Anuluj</button>
+          </div>
+        `);
+      },
+
+      openEditPostModal(postId) {
+        const post = this.posts.find(p => p.id === postId);
+        if (!post) return;
+        this.showAdminModal('Edytuj post', `
+          <input id="admin-post-id" type="hidden" value="${post.id}">
+          <input id="admin-post-author" class="admin-input" placeholder="Autor" value="${post.author.replace(/"/g, '&quot;')}">
+          <textarea id="admin-post-text" class="admin-input" style="min-height:110px; resize:vertical;" placeholder="Treść posta">${post.text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
+          <div class="flex gap-2 mt-2">
+            <button onclick="app.savePostFromModal()" class="flex-1 bg-emerald-600 px-3 py-2 rounded-xl text-xs font-semibold">Zapisz</button>
+            <button onclick="app.closeAdminModal()" class="flex-1 bg-slate-700 px-3 py-2 rounded-xl text-xs font-semibold">Anuluj</button>
+          </div>
+        `);
+      },
+
+      savePostFromModal() {
+        const id = Number(document.getElementById('admin-post-id').value || 0);
+        const author = document.getElementById('admin-post-author').value.trim() || 'Admin';
+        const text = document.getElementById('admin-post-text').value.trim();
+
+        if (!text) {
+          this.showToast('❌ Wpisz treść posta');
+          return;
+        }
+
+        if (id) {
+          const post = this.posts.find(p => p.id === id);
+          if (post) {
+            post.author = author;
+            post.text = text;
+            post.time = 'just now';
+            this.addLog('admin', 'post_updated', `Post #${id} zaktualizowany`);
+          }
+        } else {
+          const maxId = this.posts.reduce((m, p) => Math.max(m, Number(p.id) || 0), 0) || 0;
+          this.posts.unshift({
+            id: maxId + 1,
+            author,
+            text,
+            time: 'teraz'
+          });
+          this.addLog('admin', 'post_created', `Post ${author} utworzony`);
+        }
+
+        this.closeAdminModal();
+        this.showToast('✅ Post zapisany');
+        this.render();
+      },
+
+      showAdminModal(title, innerHtml) {
+        const modal = document.getElementById('admin-modal');
+        document.getElementById('admin-modal-title').textContent = title;
+        document.getElementById('admin-modal-body').innerHTML = innerHtml;
+        modal.classList.remove('hidden');
+      },
+
+      closeAdminModal() {
+        document.getElementById('admin-modal').classList.add('hidden');
       }
     };
 
-    // ========== INIT ==========
     document.addEventListener('DOMContentLoaded', () => {
       app.initTelegram();
       app.load();
       app.render();
       app.startEnergyRegen();
 
-      // Mining click
       document.getElementById('mining-click-zone').addEventListener('click', () => app.mineClick());
 
-      // Symulacja lepszego UX
       document.querySelectorAll('button').forEach(btn => {
         btn.addEventListener('click', (e) => {
           if (!e.target.closest('.nav-btn')) return;
@@ -785,6 +1341,8 @@
           btn.classList.add('active');
         });
       });
+
+      document.getElementById('admin-user-search')?.addEventListener('input', () => app.renderAdmin());
     });
   </script>
 </body>
