@@ -180,8 +180,8 @@
       inset: 10% 10%;
       border-radius: 50%;
       background:
-        linear-gradient(120deg, transparent 0 20%, rgba(34, 211, 238, 0.72) 20% 21%, transparent 21% 26%, rgba(168, 85, 247, 0.72) 26% 27%, transparent 27% 32%, rgba(34, 211, 238, 0.68) 32% 33%, transparent 33% 38%, rgba(168, 85, 247, 0.6) 38% 39%, transparent 39% 44%, rgba(34, 211, 238, 0.6) 44% 45%, transparent 45% 100%),
-        linear-gradient(30deg, transparent 0 14%, rgba(168, 85, 247, 0.72) 14% 15%, transparent 15% 20%, rgba(34, 211, 238, 0.72) 20% 21%, transparent 21% 30%, rgba(168, 85, 247, 0.72) 30% 31%, transparent 31% 100%);
+        linear-gradient(120deg, transparent 0 20%, rgba(34, 211, 238, 0.72) 20% 21%, transparent 21% 26%, rgba(168, 85, 247, 0.72) 26% 27%, transparent 27% 32%, rgba(34, 211, 238, 0.68) 32% 33%, transparent 33% 40%, rgba(168, 85, 247, 0.72) 40% 41%, transparent 41% 48%, rgba(34, 211, 238, 0.72) 48% 49%, transparent 49% 58%, rgba(168, 85, 247, 0.72) 58% 59%, transparent 59% 100%),
+        linear-gradient(30deg, transparent 0 14%, rgba(168, 85, 247, 0.72) 14% 15%, transparent 15% 20%, rgba(34, 211, 238, 0.72) 20% 21%, transparent 21% 30%, rgba(168, 85, 247, 0.72) 30% 31%, transparent 31% 42%, rgba(34, 211, 238, 0.72) 42% 43%, transparent 43% 54%, rgba(168, 85, 247, 0.72) 54% 55%, transparent 55% 100%);
       opacity: 0.9;
       filter: drop-shadow(0 0 8px rgba(34,211,238,0.5)) drop-shadow(0 0 10px rgba(168,85,247,0.4));
       animation: circuitPulse 7s ease-in-out infinite alternate;
@@ -313,31 +313,352 @@
 
     .rig-station {
       position: relative;
-      min-height: 220px;
+      min-height: 440px;
       border-radius: 22px;
       border: 1px solid rgba(148,163,184,0.16);
-      background: linear-gradient(180deg, rgba(2,6,23,0.92), rgba(15,23,42,0.95));
+      background:
+        radial-gradient(circle at 50% 18%, rgba(34,211,238,0.14), transparent 20%),
+        linear-gradient(180deg, rgba(2,6,23,0.96), rgba(5,11,21,1) 45%, rgba(7,13,24,1));
       overflow: hidden;
-      padding: 14px;
+      padding: 18px 14px 12px;
+      box-shadow: inset 0 0 30px rgba(34,211,238,0.08), inset 0 0 36px rgba(168,85,247,0.06);
     }
 
     .rig-station::before {
       content: "";
       position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at center, rgba(34,211,238,0.15), transparent 60%);
-      pointer-events: none;
+      inset: 8px 18px auto;
+      height: 28px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(34,211,238,0.18), rgba(168,85,247,0.18), rgba(34,211,238,0.12));
+      box-shadow: 0 0 18px rgba(34,211,238,0.22);
+      opacity: 0.9;
     }
 
-    .station-motherboard {
+    .rig-station::after {
+      content: "";
+      position: absolute;
+      inset: auto 12px 12px 12px;
+      height: 130px;
+      border-radius: 18px 18px 24px 24px;
+      background: linear-gradient(180deg, rgba(148,163,184,0.08), rgba(15, 23, 42, 0.42));
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      filter: blur(0.5px);
+    }
+
+    .rig-scene {
       position: relative;
       width: 100%;
-      height: 140px;
-      border-radius: 16px;
-      background: linear-gradient(180deg, rgba(17,24,39,0.9), rgba(15,23,42,0.8));
-      border: 1px solid rgba(148,163,184,0.22);
-      box-shadow: inset 0 0 25px rgba(34,211,238,0.06);
-      margin-top: 8px;
+      height: 380px;
+      overflow: hidden;
+    }
+
+    .rig-bg-grid {
+      position: absolute;
+      inset: 24px 14px 72px;
+      border-radius: 18px;
+      background:
+        linear-gradient(rgba(34,211,238,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34,211,238,0.08) 1px, transparent 1px);
+      background-size: 18px 18px;
+      mask-image: radial-gradient(circle at center, black 45%, transparent 100%);
+      opacity: 0.4;
+    }
+
+    .rig-monitor {
+      position: absolute;
+      bottom: 128px;
+      width: 140px;
+      height: 124px;
+      z-index: 3;
+      animation: monitorFloat 4.2s ease-in-out infinite;
+    }
+
+    .rig-monitor.left { left: 20px; }
+    .rig-monitor.right { right: 20px; animation-delay: 0.5s; }
+
+    .monitor-screen {
+      position: relative;
+      height: 94px;
+      border-radius: 12px 12px 10px 10px;
+      background: linear-gradient(180deg, rgba(3,8,22,0.96), rgba(12,18,32,0.95));
+      border: 2px solid rgba(56,189,248,0.7);
+      box-shadow: 0 0 0 1px rgba(168,85,247,0.26), 0 0 24px rgba(34,211,238,0.28), 0 0 30px rgba(168,85,247,0.16);
+      overflow: hidden;
+    }
+
+    .monitor-screen::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(34,211,238,0.12), transparent 35%, rgba(168,85,247,0.1));
+    }
+
+    .screen-grid {
+      position: absolute;
+      inset: 8px 7px 10px;
+      border-radius: 10px;
+      background:
+        linear-gradient(rgba(148, 163, 184, 0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px);
+      background-size: 12px 12px;
+      border: 1px solid rgba(148,163,184,0.14);
+    }
+
+    .screen-logo {
+      position: absolute;
+      left: 50%;
+      top: 55%;
+      transform: translate(-50%, -50%);
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      color: transparent;
+      background: linear-gradient(135deg, #9be7ff, #d5b3ff 50%, #b8d8ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      text-shadow: 0 0 12px rgba(34,211,238,0.3), 0 0 16px rgba(168,85,247,0.2);
+    }
+
+    .monitor-stand {
+      position: absolute;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      width: 10px;
+      height: 30px;
+      border-radius: 10px;
+      background: linear-gradient(180deg, #9ddaf9, #5b6fd1 40%, #110f2b);
+      box-shadow: 0 0 14px rgba(34,211,238,0.26);
+    }
+
+    .monitor-base {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 118px;
+      height: 16px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(17,24,39,0.9), rgba(56,189,248,0.65), rgba(168,85,247,0.68), rgba(17,24,39,0.9));
+      box-shadow: 0 0 18px rgba(34,211,238,0.2);
+    }
+
+    .rig-headset {
+      position: absolute;
+      bottom: 94px;
+      width: 58px;
+      height: 78px;
+      z-index: 2;
+      filter: drop-shadow(0 0 16px rgba(34,211,238,0.24));
+    }
+
+    .rig-headset.left { left: 10px; transform: rotate(6deg); }
+    .rig-headset.right { right: 10px; transform: scaleX(-1) rotate(6deg); }
+
+    .rig-headset::before,
+    .rig-headset::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border: 4px solid rgba(142, 220, 255, 0.9);
+      border-bottom: none;
+      border-radius: 50% 50% 40% 40% / 62% 62% 24% 24%;
+      background: linear-gradient(180deg, rgba(8,15,26,0.1), rgba(34,211,238,0.12));
+    }
+
+    .rig-headset::after {
+      inset: auto 10px 0 10px;
+      height: 25px;
+      border: 4px solid rgba(160, 98, 255, 0.9);
+      border-top: none;
+      border-radius: 0 0 24px 24px;
+      background: linear-gradient(180deg, rgba(34,211,238,0.1), rgba(168,85,247,0.1));
+    }
+
+    .rig-keyboard {
+      position: absolute;
+      left: 50%;
+      bottom: 66px;
+      transform: translateX(-50%);
+      width: 220px;
+      height: 76px;
+      border-radius: 18px 18px 18px 18px;
+      background: linear-gradient(180deg, rgba(25,29,42,0.95), rgba(10,14,22,1));
+      border: 1px solid rgba(148,163,184,0.2);
+      box-shadow: inset 0 0 18px rgba(15,23,42,0.8), 0 0 18px rgba(34,211,238,0.12);
+      z-index: 4;
+      overflow: hidden;
+    }
+
+    .rig-keyboard::before {
+      content: "";
+      position: absolute;
+      inset: 12px 18px 18px;
+      border-radius: 12px;
+      background:
+        linear-gradient(90deg, rgba(34,211,238,0.9) 0 8%, rgba(168,85,247,0.8) 8% 16%, rgba(34,211,238,0.9) 16% 24%, rgba(168,85,247,0.8) 24% 32%, rgba(34,211,238,0.9) 32% 40%, rgba(168,85,247,0.8) 40% 48%, rgba(34,211,238,0.9) 48% 56%, rgba(168,85,247,0.8) 56% 64%, rgba(34,211,238,0.9) 64% 72%, rgba(168,85,247,0.8) 72% 80%, rgba(34,211,238,0.9) 80% 88%, rgba(168,85,247,0.8) 88% 100%);
+      opacity: 0.9;
+      box-shadow: inset 0 0 12px rgba(255,255,255,0.08);
+    }
+
+    .rig-keyboard::after {
+      content: "";
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 8px;
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(34,211,238,0.5), rgba(168,85,247,0.5), rgba(236,72,153,0.45));
+      box-shadow: 0 0 18px rgba(34,211,238,0.28);
+    }
+
+    .rig-mouse {
+      position: absolute;
+      left: 50%;
+      bottom: 78px;
+      transform: translateX(110px);
+      width: 36px;
+      height: 52px;
+      border-radius: 32px 32px 46px 46px;
+      background: linear-gradient(180deg, rgba(20,25,38,1), rgba(7,12,20,1));
+      border: 1px solid rgba(34,211,238,0.4);
+      box-shadow: 0 0 18px rgba(168,85,247,0.18);
+      z-index: 4;
+    }
+
+    .rig-mouse::before {
+      content: "";
+      position: absolute;
+      inset: 8px 12px 10px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(34,211,238,0.6), rgba(168,85,247,0.75));
+      opacity: 0.7;
+    }
+
+    .rig-table {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      bottom: 0;
+      height: 96px;
+      border-radius: 28px 28px 18px 18px;
+      background: linear-gradient(180deg, rgba(43,51,66,0.85), rgba(11,17,29,1));
+      border: 1px solid rgba(148,163,184,0.18);
+      box-shadow: inset 0 0 26px rgba(34,211,238,0.08), 0 18px 30px rgba(2,6,23,0.4);
+      z-index: 1;
+    }
+
+    .rig-table::before {
+      content: "";
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(34,211,238,0.8), rgba(168,85,247,0.8), rgba(236,72,153,0.5));
+      box-shadow: 0 0 18px rgba(34,211,238,0.25);
+    }
+
+    .rig-case {
+      position: absolute;
+      left: 50%;
+      bottom: 26px;
+      transform: translateX(-50%);
+      width: 148px;
+      height: 104px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(8,18,31,0.96), rgba(11,17,32,1));
+      border: 2px solid rgba(42,180,220,0.75);
+      box-shadow: inset 0 0 18px rgba(34,211,238,0.08), 0 0 26px rgba(34,211,238,0.12), 0 0 28px rgba(168,85,247,0.1);
+      z-index: 5;
+    }
+
+    .rig-case::before {
+      content: "";
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      top: 20px;
+      bottom: 12px;
+      border-radius: 10px;
+      background: rgba(34,211,238,0.05);
+      border: 1px solid rgba(148,163,184,0.14);
+    }
+
+    .case-fan {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 3px solid rgba(34,211,238,0.8);
+      box-shadow: 0 0 16px rgba(34,211,238,0.18), inset 0 0 10px rgba(34,211,238,0.26);
+      background: radial-gradient(circle, rgba(34,211,238,0.16), rgba(12,18,32,0.95));
+      animation: fanSpin 2.8s linear infinite;
+    }
+
+    .case-fan.one { left: 18px; top: 28px; }
+    .case-fan.two { right: 18px; top: 28px; }
+    .case-fan.three { left: 18px; bottom: 20px; }
+    .case-fan.four { right: 18px; bottom: 20px; }
+
+    .case-logo {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 900;
+      color: transparent;
+      background: linear-gradient(135deg, #8de7ff, #d2bcff 65%, #f0abff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      border: 1px solid rgba(147, 207, 255, 0.4);
+      box-shadow: 0 0 12px rgba(34,211,238,0.18);
+    }
+
+    .case-pipe {
+      position: absolute;
+      width: 18px;
+      height: 82px;
+      border: 2px solid rgba(34,211,238,0.84);
+      border-left: none;
+      border-radius: 0 14px 14px 0;
+      top: 14px;
+      right: 20px;
+      box-shadow: 0 0 12px rgba(34,211,238,0.18);
+    }
+
+    .case-pipe::before {
+      content: "";
+      position: absolute;
+      right: -10px;
+      top: 56px;
+      width: 18px;
+      height: 2px;
+      background: rgba(34,211,238,0.9);
+      box-shadow: 0 0 12px rgba(34,211,238,0.3);
+    }
+
+    .case-pipe.left {
+      left: 20px;
+      right: auto;
+      border-left: 2px solid rgba(34,211,238,0.84);
+      border-right: none;
+      border-radius: 14px 0 0 14px;
+    }
+
+    .case-pipe.left::before {
+      right: auto;
+      left: -10px;
     }
 
     .station-part {
@@ -524,6 +845,16 @@
       0%, 100% { transform: translateY(0px) scale(0.9); opacity: 0.6; }
       50% { transform: translateY(-12px) scale(1.1); opacity: 1; }
     }
+
+    @keyframes monitorFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+    }
+
+    @keyframes fanSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -533,7 +864,7 @@
     <header class="sticky top-0 z-30 flex items-center justify-between px-4 py-3 bg-[#080b14]/90 backdrop-blur-xl border-b border-slate-800/80">
       <div class="flex items-center gap-3">
         <button data-screen="profile" class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 via-indigo-600 to-cyan-400 p-[1.5px] transition active:scale-95 shadow-lg shadow-violet-500/30">
-          <div id="header-avatar" class="w-full h-full bg-[#080b14] rounded-[10.5px] flex items-center justify-center text-lg font-black text-transparent bg-clip-text bg-gradient-to-tr from-violet-400 to-cyan-300">
+          <div id="header-avatar" class="w-full h-full bg-[#080b14] rounded-[10.5px] flex items-center justify-center text-lg font-black text-transparent bg-clip-text bg-gradient-to-tr from-violet-400 to-cyan-400">
             TP
           </div>
         </button>
@@ -588,7 +919,7 @@
               <span class="text-[10px] font-bold text-violet-400 bg-violet-500/10 border border-violet-500/20 px-2 py-0.5 rounded-full uppercase">Panel Administratora (Tylko Ty)</span>
               <span class="text-[10px] muted">Zarządzanie Systemem</span>
             </div>
-            
+
             <div class="flex gap-2 border-b border-slate-800 pb-2">
               <button onclick="switchAdminTab('posts')" class="admin-tab-btn text-xs font-bold text-violet-400 pb-1 border-b-2 border-violet-500">Posty</button>
               <button onclick="switchAdminTab('events')" class="admin-tab-btn text-xs font-semibold text-slate-400 pb-1 border-b-2 border-transparent">Event Live</button>
@@ -597,11 +928,11 @@
             </div>
 
             <div id="admin-sub-posts" class="admin-sub-view space-y-3">
-              <textarea id="admin-post-input" rows="3" class="w-full rounded-xl bg-[#080b14] border border-slate-700/80 p-3 text-xs text-slate-200 focus:outline-none focus:border-violet-500 resize-none" placeholder="Napisz nowy post..."></textarea>
-              <input id="admin-media-input" type="text" class="w-full rounded-xl bg-[#080b14] border border-slate-700/80 p-2.5 text-xs text-slate-200 focus:outline-none focus:border-violet-500" placeholder="Link do zdjęcia / grafiki / załącznika" />
-              <input id="admin-link-input" type="text" class="w-full rounded-xl bg-[#080b14] border border-slate-700/80 p-2.5 text-xs text-slate-200 focus:outline-none focus:border-violet-500" placeholder="Opcjonalny link docelowy (URL)" />
+              <textarea id="admin-post-input" rows="3" class="w-full rounded-xl bg-[#080b14] border border-slate-700/80 p-3 text-xs text-slate-200 focus:outline-none focus:border-violet-500 resize-none" placeholder="Napisz post..."></textarea>
+              <input id="admin-media-input" type="text" class="w-full rounded-xl bg-[#080b14] border border-slate-700/80 p-2.5 text-xs text-slate-200 focus:outline-none focus:border-violet-500" placeholder="Media / zdjęcie / wideo (URL)" />
+              <input id="admin-link-input" type="text" class="w-full rounded-xl bg-[#080b14] border border-slate-700/80 p-2.5 text-xs text-slate-200 focus:outline-none focus:border-violet-500" placeholder="Link do treści / podpisu" />
               <div class="flex justify-end">
-                <button id="publish-post-btn" class="bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition active:scale-95">
+                <button id="publish-post-btn" class="bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition active:scale-95 flex items-center gap-2">
                   <i class="fa-solid fa-paper-plane text-[10px]"></i> Opublikuj Post
                 </button>
               </div>
@@ -649,7 +980,7 @@
           <div class="panel p-4 space-y-3">
             <h2 class="font-bold text-sm text-slate-200">Społeczność & Dyskusja</h2>
             <p class="text-xs muted">Twoje wpisy są zapisywane lokalnie na tym urządzeniu i będą dostępne po synchronizacji z backendem.</p>
-            <textarea id="post-input" rows="3" class="w-full rounded-xl bg-[#080b14] border border-slate-700/80 p-3 text-xs text-slate-200 focus:outline-none focus:border-violet-500 resize-none" placeholder="Opowiedz o swoim postępie..."></textarea>
+            <textarea id="post-input" rows="3" class="w-full rounded-xl bg-[#080b14] border border-slate-700/80 p-3 text-xs text-slate-200 focus:outline-none focus:border-violet-500 resize-none" placeholder="Co masz na myśli?"></textarea>
             <div class="flex justify-end">
               <button id="create-post-btn" class="bg-violet-600 hover:bg-violet-500 text-white text-xs font-semibold px-4 py-2 rounded-xl transition active:scale-95 flex items-center gap-2">
                 <i class="fa-solid fa-paper-plane text-[10px]"></i> Opublikuj
@@ -738,7 +1069,7 @@
             </div>
             <h3 id="live-event-title" class="text-base font-bold text-white">Cyber Week — Community Sprint</h3>
             <p id="live-event-desc" class="text-xs muted">Wykonuj zadania społecznościowe, zbieraj gwiazdki i odblokuj limitowaną odznakę.</p>
-            <button id="live-event-action-btn" data-task="event" data-reward="50" data-label="Event" class="task-action w-full bg-violet-600 hover:bg-violet-500 text-white font-semibold text-xs py-2.5 rounded-xl transition active:scale-95">Dodaj +50 ★</button>
+            <button id="live-event-action-btn" data-task="event" data-reward="50" data-label="Event" class="task-action w-full bg-violet-600 hover:bg-violet-500 text-white font-semibold text-xs py-2.5 rounded-xl transition active:scale-95">Wziąć udział</button>
           </div>
         </div>
 
@@ -963,15 +1294,42 @@
           </div>
 
           <div class="rig-station">
-            <div class="station-motherboard">
-              <div class="station-part station-mat" data-part="mat"><div class="rig-part-box"><i class="fa-solid fa-square"></i></div></div>
-              <div class="station-part station-mouse" data-part="mouse"><div class="rig-part-box"><i class="fa-solid fa-computer-mouse"></i></div></div>
-              <div class="station-part station-keyboard" data-part="keyboard"><div class="rig-part-box"><i class="fa-solid fa-keyboard"></i></div></div>
-              <div class="station-part station-case" data-part="case"><div class="rig-part-box"><i class="fa-solid fa-cube"></i></div></div>
-              <div class="station-part station-ram" data-part="ram"><div class="rig-part-box"><i class="fa-solid fa-memory"></i></div></div>
-              <div class="station-part station-monitor" data-part="monitor"><div class="rig-part-box"><i class="fa-solid fa-display"></i></div></div>
-              <div class="station-part station-cpu" data-part="cpu"><div class="rig-part-box"><i class="fa-solid fa-microchip"></i></div></div>
-              <div class="station-part station-gpu" data-part="gpu"><div class="rig-part-box"><i class="fa-solid fa-server"></i></div></div>
+            <div class="rig-scene">
+              <div class="rig-bg-grid"></div>
+
+              <div class="rig-headset left"></div>
+              <div class="rig-headset right"></div>
+
+              <div class="rig-monitor left">
+                <div class="monitor-screen">
+                  <div class="screen-grid"></div>
+                  <div class="screen-logo">TP</div>
+                </div>
+                <div class="monitor-stand"></div>
+                <div class="monitor-base"></div>
+              </div>
+
+              <div class="rig-monitor right">
+                <div class="monitor-screen">
+                  <div class="screen-grid"></div>
+                  <div class="screen-logo">TP</div>
+                </div>
+                <div class="monitor-stand"></div>
+                <div class="monitor-base"></div>
+              </div>
+
+              <div class="rig-keyboard"></div>
+              <div class="rig-mouse"></div>
+              <div class="rig-table"></div>
+              <div class="rig-case">
+                <div class="case-fan one"></div>
+                <div class="case-fan two"></div>
+                <div class="case-fan three"></div>
+                <div class="case-fan four"></div>
+                <div class="case-pipe left"></div>
+                <div class="case-pipe"></div>
+                <div class="case-logo">TP</div>
+              </div>
             </div>
           </div>
 
@@ -998,699 +1356,71 @@
             </h3>
             <span class="text-[10px] text-amber-400 bg-amber-500/10 border border-amber-500/20 rounded-full px-2 py-0.5">Faza 3</span>
           </div>
-          <p class="text-xs muted">Podłącz swój portfel Web3, aby przygotować się do odbioru airdropa $TECHNIX.</p>
-          <button class="wallet-toast-btn w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-bold py-2.5 rounded-xl transition active:scale-95">Połącz portfel</button>
-
-          <div class="mini-chart">
-            <svg viewBox="0 0 320 120" preserveAspectRatio="none" aria-label="Tech price chart">
-              <defs>
-                <linearGradient id="chartGlow" x1="0" x2="1">
-                  <stop offset="0%" stop-color="#22d3ee" />
-                  <stop offset="100%" stop-color="#8b5cf6" />
-                </linearGradient>
-              </defs>
-              <path d="M0,95 C30,85 40,75 60,78 S110,64 140,70 S175,45 200,50 S245,35 320,18 L320,120 L0,120 Z" fill="rgba(34,211,238,0.12)"></path>
-              <path d="M0,95 C30,85 40,75 60,78 S110,64 140,70 S175,45 200,50 S245,35 320,18" fill="none" stroke="url(#chartGlow)" stroke-width="3" stroke-linecap="round"></path>
-            </svg>
+          <div class="space-y-2 text-xs muted">
+            <div class="flex justify-between"><span>Adres portfela</span><span class="text-slate-300">Tonkeeper_...4E2F</span></div>
+            <div class="flex justify-between"><span>Połączenie</span><span class="text-emerald-400">Aktywne</span></div>
           </div>
         </div>
-      </section>
-
-      <section id="screen-profile" class="screen hidden space-y-4">
-        <div class="panel p-5 text-center space-y-3">
-          <div class="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-violet-600 to-cyan-400 p-0.5 shadow-lg shadow-violet-500/30">
-            <div id="profile-avatar" class="w-full h-full bg-[#080b14] rounded-full flex items-center justify-center text-xl text-cyan-400 font-bold overflow-hidden">
-              <img id="profile-avatar-img" alt="Telegram avatar" class="w-full h-full object-cover hidden" />
-              <span id="profile-avatar-fallback" class="inline-block">TP</span>
-            </div>
-          </div>
-          <div>
-            <h2 id="profile-name" class="font-bold text-base text-white">Gostek</h2>
-            <p id="profile-id" class="text-xs muted">TG ID: brak danych</p>
-          </div>
-        </div>
-
-        <div class="panel p-4 space-y-2">
-          <div class="flex justify-between items-center text-xs py-1">
-            <span class="muted">Twój Poziom:</span>
-            <span id="profile-level" class="font-bold text-violet-400">Level 1</span>
-          </div>
-          <div class="flex justify-between items-center text-xs py-1">
-            <span class="muted">Gwiazdki:</span>
-            <span id="profile-stars" class="font-bold text-cyan-400">0 ★</span>
-          </div>
-        </div>
-
-        <div class="panel divide-y divide-slate-800/80 text-xs">
-          <button class="profile-toast-btn w-full p-3.5 text-left flex justify-between items-center text-slate-300">
-            <span>Ustawienia Profilu</span>
-            <i class="fa-solid fa-chevron-right text-[10px] muted"></i>
-          </button>
-          <button class="profile-toast-btn w-full p-3.5 text-left flex justify-between items-center text-slate-300">
-            <span>Bezpieczeństwo & Dostęp</span>
-            <i class="fa-solid fa-chevron-right text-[10px] muted"></i>
-          </button>
-        </div>
-      </section>
-
-      <section id="screen-menu" class="screen hidden space-y-4">
-        <h2 class="text-lg font-bold text-white">Menu Główne</h2>
-        <div class="panel p-4 space-y-2 text-xs">
-          <button data-screen="home" class="w-full p-2.5 rounded-xl bg-slate-900/60 text-left text-slate-200">O TechnixPro</button>
-          <button class="profile-toast-btn w-full p-2.5 rounded-xl bg-slate-900/60 text-left text-slate-200">Wsparcie & Kontakt</button>
-        </div>
-      </section>
-
-      <section id="screen-search" class="screen hidden space-y-4">
-        <input class="panel w-full p-3 text-xs bg-[#080b14] text-white border border-slate-700 rounded-xl focus:outline-none" placeholder="Szukaj w TechnixPro..." />
-      </section>
-
-      <section id="screen-notifications" class="screen hidden space-y-4">
-        <div class="panel p-4 text-xs space-y-2">
-          <div class="font-bold text-white">Powiadomienie Systemowe</div>
-          <p class="muted">Witaj w TechnixPro! Połączyliśmy Twoje konto z interfejsem Telegram Mini App.</p>
-        </div>
-      </section>
-
-      <section id="screen-comments" class="screen hidden space-y-4">
-        <h2 class="text-base font-bold text-white">Komentarze</h2>
-        <textarea class="panel w-full p-3 text-xs bg-[#080b14] border border-slate-700 rounded-xl focus:outline-none" rows="3" placeholder="Dodaj komentarz..."></textarea>
-        <button class="profile-toast-btn bg-violet-600 text-xs font-semibold px-4 py-2 rounded-xl">Wyślij</button>
       </section>
     </div>
   </main>
 
-  <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-[#080b14]/95 backdrop-blur-xl border-t border-slate-800/80 z-40">
-    <div class="grid grid-cols-6 gap-1 px-2 py-2">
-      <button data-screen="home" class="nav-btn active flex flex-col items-center justify-center py-2 rounded-xl">
-        <i class="fa-solid fa-house"></i>
-        <span>Home</span>
-      </button>
-      <button data-screen="crypto" class="nav-btn flex flex-col items-center justify-center py-2 rounded-xl">
-        <i class="fa-solid fa-microchip"></i>
-        <span>TechnixPro</span>
-      </button>
-      <button data-screen="gift" class="nav-btn flex flex-col items-center justify-center py-2 rounded-xl relative">
-        <i class="fa-solid fa-gift"></i>
-        <span>Bonusy</span>
-      </button>
-      <button data-screen="wallet" class="nav-btn flex flex-col items-center justify-center py-2 rounded-xl">
-        <i class="fa-solid fa-wallet"></i>
-        <span>Portfel</span>
-      </button>
-      <button data-screen="profile" class="nav-btn flex flex-col items-center justify-center py-2 rounded-xl">
-        <i class="fa-solid fa-user"></i>
-        <span>Profil</span>
-      </button>
-      <button data-screen="menu" class="nav-btn flex flex-col items-center justify-center py-2 rounded-xl">
-        <i class="fa-solid fa-bars"></i>
-        <span>Menu</span>
-      </button>
-    </div>
-  </nav>
-
   <script>
-    const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
-    if (tg) {
-      tg.ready();
-      tg.expand();
-    }
-
-    const defaultUser = {
-      first_name: 'Żaku',
-      last_name: '',
-      username: 'zaku',
-      id: 0,
-      photo_url: ''
-    };
-
-    const ADMIN_TELEGRAM_ID = 0;
-
-    const state = {
-      stars: 1280,
-      level: 1,
-      energy: 1000,
-      energyMax: 1000,
-      tp: 240,
-      taskHistory: [
-        { label: 'Pierwsze logowanie', value: 25, time: 'dziś' }
-      ],
-      posts: [
-        { author: 'System', text: 'TechnixPro Core Engine online. Wersja 2.7 Edge aktywna.', media: '', time: '2 min temu' },
-        { author: 'System', text: 'Nowa seria zadań społecznościowych została dodana do sekcji gwiazd.', media: '', time: '12 min temu' }
-      ],
-      channelPosts: [
-        { author: 'TechnixPro', text: 'Nowa wersja systemu nagród trafiła do mini app. Włącz tryb aktywności i zbieraj gwiazdki.', media: '', time: '8 min temu' },
-        { author: 'Core Team', text: 'Mining Engine osiągnął 64% wydajności. Kolejny etap odblokowuje automatyczne pakiety TP.', media: '', time: '23 min temu' }
-      ],
-      tasks: [
-        { title: 'Aktywność w kanale', reward: 25, label: 'Kanał' },
-        { title: 'Wspólnota: post do grupy', reward: 40, label: 'Grupa' },
-        { title: 'Mining boost', reward: 60, label: 'TP' },
-        { title: 'Referral invite', reward: 100, label: 'Referral' }
-      ],
-      liveEvent: {
-        title: 'Cyber Week — Community Sprint',
-        desc: 'Wykonuj zadania społecznościowe, zbieraj gwiazdki i odblokuj limitowaną odznakę.',
-        reward: 50
-      },
-      rigParts: {
-        mat: false,
-        mouse: false,
-        keyboard: false,
-        case: false,
-        ram: false,
-        monitor: false,
-        cpu: false,
-        gpu: false
-      },
-      rigCatalog: [
-        { key: 'mat', name: 'Podkładka pod mysz', icon: 'fa-square', cost: 20 },
-        { key: 'mouse', name: 'Myszka', icon: 'fa-computer-mouse', cost: 40 },
-        { key: 'keyboard', name: 'Klawiatura', icon: 'fa-keyboard', cost: 60 },
-        { key: 'case', name: 'Obudowa', icon: 'fa-cube', cost: 100 },
-        { key: 'ram', name: 'RAM', icon: 'fa-memory', cost: 150 },
-        { key: 'monitor', name: 'Monitor', icon: 'fa-display', cost: 200 },
-        { key: 'cpu', name: 'Procesor', icon: 'fa-microchip', cost: 150 },
-        { key: 'gpu', name: 'Karta graficzna (GPU)', icon: 'fa-server', cost: 280 }
-      ]
-    };
-
-    function formatK(value) {
-      return new Intl.NumberFormat('pl-PL', { maximumFractionDigits: 0 }).format(value);
-    }
-
-    function parseTelegramUser() {
-      const raw = tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : defaultUser;
-      return {
-        ...defaultUser,
-        ...raw
-      };
-    }
-
-    function computeLevel(stars) {
-      if (stars < 1500) return 1;
-      if (stars < 5000) return 2;
-      if (stars < 12000) return 3;
-      if (stars < 25000) return 4;
-      return 5;
-    }
-
-    function buildLevelLabel(level) {
-      return `LEVEL ${level}`;
-    }
-
-    function getNextLevelTarget(level) {
-      const targets = [1500, 5000, 12000, 25000, Number.MAX_SAFE_INTEGER];
-      return targets[level - 1] || 25000;
-    }
-
-    function updateStarsDisplay() {
-      const starsTotal = document.getElementById('stars-total');
-      const progress = document.getElementById('stars-progress-bar');
-      const progressText = document.getElementById('stars-progress-text');
-      const profileStars = document.getElementById('profile-stars');
-      const rankLabel = document.getElementById('rank-stars-display');
-      const levelBadge = document.getElementById('user-level-badge');
-      const profileLevel = document.getElementById('profile-level');
-      const adminStatStars = document.getElementById('admin-total-stars-stat');
-
-      state.level = computeLevel(state.stars);
-      const nextTarget = getNextLevelTarget(state.level);
-      const currentLevelBase = state.level === 1 ? 0 : [0, 1500, 5000, 12000, 25000][state.level - 1];
-      const progressValue = Math.min((state.stars - currentLevelBase) / (nextTarget - currentLevelBase || 1), 1);
-
-      if (starsTotal) starsTotal.textContent = formatK(state.stars);
-      if (progressText) progressText.textContent = `${formatK(state.stars)} / ${formatK(nextTarget)} ★`;
-      if (progress) progress.style.width = `${(progressValue * 100).toFixed(0)}%`;
-      if (profileStars) profileStars.textContent = `${formatK(state.stars)} ★`;
-      if (rankLabel) rankLabel.textContent = `${formatK(state.stars)} ★`;
-      if (levelBadge) levelBadge.textContent = buildLevelLabel(state.level);
-      if (profileLevel) profileLevel.textContent = `Level ${state.level}`;
-      if (adminStatStars) adminStatStars.textContent = `${formatK(state.stars)} ★`;
-    }
-
-    function renderTaskList() {
-      const taskList = document.getElementById('task-list');
-      if (!taskList) return;
-
-      taskList.innerHTML = state.tasks.map(task => `
-        <button data-task="${task.label.toLowerCase()}" data-reward="${task.reward}" data-label="${task.title}" class="task-action w-full text-left panel px-3 py-3 rounded-xl flex items-center justify-between gap-3">
-          <div>
-            <div class="text-xs font-semibold text-white">${task.title}</div>
-            <div class="text-[10px] muted">+${task.reward} ★</div>
-          </div>
-          <span class="text-[10px] text-violet-300 font-bold">Złap</span>
-        </button>
-      `).join('');
-
-      document.querySelectorAll('#task-list .task-action').forEach(button => {
-        button.addEventListener('click', () => {
-          const reward = Number(button.dataset.reward || 0);
-          const label = button.dataset.label || 'Zadanie';
-          addStars(reward, label);
-        });
-      });
-    }
-
-    function renderRewardLog() {
-      const rewardLog = document.getElementById('reward-log');
-      if (!rewardLog) return;
-      const items = state.taskHistory.slice(0, 5);
-
-      rewardLog.innerHTML = items.map(item => `
-        <div class="flex items-center justify-between text-xs rounded-xl bg-slate-900/60 border border-slate-800 px-3 py-2">
-          <span class="text-slate-300">${item.label}</span>
-          <span class="font-bold text-emerald-400">+${item.value} ★</span>
-        </div>
-      `).join('');
-    }
-
-    function addStars(amount, label) {
-      state.stars += amount;
-      state.taskHistory.unshift({ label, value: amount, time: 'teraz' });
-      updateStarsDisplay();
-      renderRewardLog();
-      showToast(`Dodano ${amount} ★ do profilu (${label})`);
-    }
-
-    function showToast(msg) {
-      const toast = document.getElementById('toast');
-      if (!toast) return;
-      toast.textContent = msg;
-      toast.classList.add('show');
-      clearTimeout(window.toastTimer);
-      window.toastTimer = setTimeout(() => toast.classList.remove('show'), 1700);
-    }
-
-    function show(screenName, title = 'TechnixPro') {
+    document.addEventListener('DOMContentLoaded', () => {
       const screens = document.querySelectorAll('.screen');
-      screens.forEach(screen => screen.classList.add('hidden'));
-      const active = document.getElementById(`screen-${screenName}`);
-      if (active) active.classList.remove('hidden');
+      const navButtons = document.querySelectorAll('[data-screen]');
+      const homeTabs = document.querySelectorAll('[data-home-tab]');
+      const rewardTabs = document.querySelectorAll('[data-reward-tab]');
 
-      const titleNode = document.getElementById('header-title');
-      if (titleNode) titleNode.textContent = title;
+      function showScreen(id) {
+        screens.forEach(screen => {
+          screen.classList.toggle('hidden', screen.id !== id);
+        });
+      }
 
-      const homeSubtabs = document.getElementById('home-subtabs');
-      const giftSubtabs = document.getElementById('gift-subtabs');
+      navButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const target = button.dataset.screen;
+          if (target === 'search' || target === 'notifications' || target === 'profile') {
+            showScreen('screen-home');
+          }
+        });
+      });
 
-      if (homeSubtabs) homeSubtabs.classList.toggle('hidden', screenName !== 'home');
-      if (giftSubtabs) giftSubtabs.classList.toggle('hidden', screenName !== 'gift');
-
-      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.screen === screenName));
-    }
-
-    function renderHomeSubtabs() {
-      document.querySelectorAll('[data-home-tab]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const key = btn.dataset.homeTab;
-          document.getElementById('home-channel').classList.toggle('hidden', key !== 'channel');
-          document.getElementById('home-group').classList.toggle('hidden', key !== 'group');
-          document.getElementById('home-info').classList.toggle('hidden', key !== 'info');
-
-          document.querySelectorAll('[data-home-tab]').forEach(tab => {
-            const active = tab === btn;
-            tab.classList.toggle('text-[#b9a4ff]', active);
-            tab.classList.toggle('muted', !active);
-            tab.classList.toggle('border-violet-500', active);
-            tab.classList.toggle('border-transparent', !active);
+      homeTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          homeTabs.forEach(btn => {
+            btn.classList.toggle('text-[#b9a4ff]', btn === tab);
+            btn.classList.toggle('muted', btn !== tab);
+            btn.classList.toggle('border-violet-500', btn === tab);
+            btn.classList.toggle('border-transparent', btn !== tab);
           });
-        });
-      });
-    }
-
-    function renderRewardTabs() {
-      document.querySelectorAll('[data-reward-tab]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const key = btn.dataset.rewardTab;
-          document.querySelectorAll('.reward-view').forEach(view => view.classList.add('hidden'));
-          const target = document.getElementById(`reward-${key}`);
-          if (target) target.classList.remove('hidden');
-
-          document.querySelectorAll('[data-reward-tab]').forEach(tab => {
-            const active = tab === btn;
-            tab.classList.toggle('active-sub', active);
-            tab.classList.toggle('muted', !active);
-            tab.classList.toggle('border-violet-500', active);
-            tab.classList.toggle('border-transparent', !active);
-            tab.classList.toggle('text-white', active);
+          const target = tab.dataset.homeTab;
+          document.querySelectorAll('.sub').forEach(panel => {
+            panel.classList.add('hidden');
           });
-        });
-      });
-    }
-
-    function renderPostsFeed() {
-      const postsFeed = document.getElementById('posts-feed');
-      if (!postsFeed) return;
-      postsFeed.innerHTML = state.posts.map(post => `
-        <div class="panel p-3 space-y-2">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2">
-              <div class="w-7 h-7 rounded-full bg-gradient-to-br from-violet-500 to-cyan-400 flex items-center justify-center text-[10px] font-black text-slate-950">${(post.author || 'T').slice(0, 1).toUpperCase()}</div>
-              <div>
-                <div class="text-[10px] font-semibold text-white">${post.author}</div>
-                <div class="text-[9px] muted">${post.time}</div>
-              </div>
-            </div>
-            <span class="text-[9px] text-cyan-300">#${post.author === 'System' ? 'tech' : 'crew'}</span>
-          </div>
-          <p class="text-xs text-slate-200 leading-relaxed">${post.text}</p>
-          ${post.media ? `<img src="${post.media}" alt="media" class="w-full rounded-xl border border-slate-800 object-cover max-h-48" />` : ''}
-          <div class="flex items-center gap-3 text-[10px] text-slate-400">
-            <span><i class="fa-regular fa-heart"></i> 42</span>
-            <span><i class="fa-regular fa-comment"></i> 9</span>
-            <span><i class="fa-regular fa-share-from-square"></i> 3</span>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function renderChannelFeed() {
-      const feed = document.getElementById('channel-feed');
-      if (!feed) return;
-      feed.innerHTML = state.channelPosts.map(post => `
-        <article class="panel p-3.5">
-          <div class="flex items-center justify-between gap-3 mb-2">
-            <div class="flex items-center gap-2">
-              <div class="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-cyan-400 flex items-center justify-center text-[10px] font-bold text-slate-950">${(post.author || 'T').slice(0, 1).toUpperCase()}</div>
-              <div>
-                <div class="text-[10px] font-semibold text-white">${post.author}</div>
-                <div class="text-[9px] muted">${post.time}</div>
-              </div>
-            </div>
-            <span class="text-[10px] text-violet-300 bg-violet-500/10 border border-violet-500/20 rounded-full px-2 py-0.5">Official</span>
-          </div>
-          <p class="text-xs text-slate-200 leading-relaxed">${post.text}</p>
-          ${post.media ? `<img src="${post.media}" class="mt-3 rounded-xl w-full object-cover max-h-44 border border-slate-800" alt="channel" />` : ''}
-          ${post.link ? `<a href="${post.link}" target="_blank" class="block mt-2 text-xs text-cyan-400 underline">${post.link}</a>` : ''}
-        </article>
-      `).join('');
-    }
-
-    function createNewPost() {
-      const input = document.getElementById('post-input');
-      const text = input.value.trim();
-      if (!text) { showToast('Napisz treść posta zanim opublikujesz.'); return; }
-      state.posts.unshift({
-        author: 'Żaku',
-        text,
-        media: '',
-        time: 'teraz'
-      });
-      renderPostsFeed();
-      input.value = '';
-      showToast('Post został dodany do grupy.');
-      addStars(12, 'Nowy post');
-    }
-
-    window.switchAdminTab = function(tabKey) {
-      document.querySelectorAll('.admin-sub-view').forEach(v => v.classList.add('hidden'));
-      document.getElementById(`admin-sub-${tabKey}`).classList.remove('hidden');
-
-      document.querySelectorAll('.admin-tab-btn').forEach(btn => {
-        btn.classList.remove('text-violet-400', 'border-violet-500', 'border-b-2');
-        btn.classList.add('text-slate-400', 'border-transparent');
-      });
-      event.target.classList.remove('text-slate-400', 'border-transparent');
-      event.target.classList.add('text-violet-400', 'border-violet-500', 'border-b-2');
-    }
-
-    function publishChannelPost() {
-      const input = document.getElementById('admin-post-input');
-      const media = document.getElementById('admin-media-input');
-      const link = document.getElementById('admin-link-input');
-      const text = input.value.trim();
-      if (!text) { showToast('Wpisz treść posta kanałowego.'); return; }
-      state.channelPosts.unshift({
-        author: 'Żaku (Admin)',
-        text,
-        media: media.value.trim(),
-        link: link.value.trim(),
-        time: 'teraz'
-      });
-      renderChannelFeed();
-      input.value = '';
-      media.value = '';
-      link.value = '';
-      showToast('Opublikowano post, grafikę lub załącznik na kanale.');
-      addStars(25, 'Panel Administratora');
-    }
-
-    function initTelegramProfile() {
-      const user = parseTelegramUser();
-      const username = document.getElementById('telegram-username');
-      const profileName = document.getElementById('profile-name');
-      const profileId = document.getElementById('profile-id');
-      const avatarFallback = document.getElementById('profile-avatar-fallback');
-      const avatarImg = document.getElementById('profile-avatar-img');
-      const headerAvatar = document.getElementById('header-avatar');
-      const adminPanelContainer = document.getElementById('admin-panel-container');
-
-      const name = [user.first_name, user.last_name].filter(Boolean).join(' ') || 'Żaku';
-      const usernameText = user.username ? `@${user.username}` : '@zaku';
-
-      if (username) username.textContent = usernameText;
-      if (profileName) profileName.textContent = name;
-      if (profileId) profileId.textContent = user.id ? `TG ID: ${user.id}` : 'TG ID: brak danych';
-      if (headerAvatar) headerAvatar.textContent = name.slice(0, 2).toUpperCase();
-
-      const isOwner = (user.id === ADMIN_TELEGRAM_ID) || (ADMIN_TELEGRAM_ID === 0); 
-      if (adminPanelContainer && isOwner) {
-        adminPanelContainer.classList.remove('hidden');
-      }
-
-      if (user.photo_url && avatarImg && avatarFallback && headerAvatar) {
-        avatarImg.src = user.photo_url;
-        avatarImg.classList.remove('hidden');
-        avatarFallback.classList.add('hidden');
-        headerAvatar.textContent = '';
-        headerAvatar.style.backgroundImage = `url(${user.photo_url})`;
-        headerAvatar.style.backgroundSize = 'cover';
-        headerAvatar.style.backgroundPosition = 'center';
-      }
-    }
-
-    function buyRigPartWithStars(itemKey, cost) {
-      if (state.stars < cost) {
-        showToast(`Masz za mało gwiazdek! Potrzebujesz ${cost} ★.`);
-        return;
-      }
-      state.stars -= cost;
-      updateStarsDisplay();
-      completePurchase(itemKey);
-    }
-
-    function completePurchase(key) {
-      const item = state.rigCatalog.find(i => i.key === key);
-      state.rigParts[key] = true;
-      const partElement = document.querySelector(`.station-part[data-part="${key}"]`);
-      if (partElement) {
-        partElement.classList.add('active');
-      }
-      renderRigShop();
-      showToast(`${item ? item.name : 'Część'} została pomyślnie kupiona!`);
-    }
-
-    function renderRigShop() {
-      const rigShop = document.getElementById('rig-shop');
-      if (!rigShop) return;
-      rigShop.innerHTML = state.rigCatalog.map(item => {
-        const owned = state.rigParts[item.key];
-        return `
-          <div class="shop-item">
-            <div class="shop-item-icon"><i class="fa-solid ${item.icon}"></i></div>
-            <div>
-              <div class="text-[10px] font-semibold text-white">${item.name}</div>
-              <div class="text-[9px] text-amber-400 font-bold"><i class="fa-solid fa-star text-[8px]"></i> ${item.cost} Telegram Stars</div>
-            </div>
-            <button data-rig="${item.key}" data-cost="${item.cost}" class="${owned ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/20' : 'bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-extrabold'} px-2 py-2 rounded-lg transition active:scale-95">
-              ${owned ? 'Kupione' : 'Kup (Stars)'}
-            </button>
-          </div>
-        `;
-      }).join('');
-
-      document.querySelectorAll('[data-rig]').forEach(button => {
-        button.addEventListener('click', () => {
-          const key = button.dataset.rig;
-          const cost = Number(button.dataset.cost || 0);
-          if (state.rigParts[key]) {
-            showToast(`${state.rigCatalog.find(item => item.key === key).name} jest już odblokowany.`);
-            return;
-          }
-          buyRigPartWithStars(key, cost);
-        });
-      });
-    }
-
-    function initCryptoGame() {
-      const techTokenCount = document.getElementById('tech-token-count');
-      const techProgressFill = document.getElementById('tech-progress-fill');
-      const techProgressText = document.getElementById('tech-progress-text');
-      const techRemaining = document.getElementById('tech-remaining-time');
-      const techMinedValue = document.getElementById('tech-mined-value');
-      const energyValue = document.getElementById('energyValue');
-      const energyMax = document.getElementById('energyMax');
-      const energyFill = document.getElementById('energyFill');
-      const tpBalance = document.getElementById('tpBalance');
-      const techTokenFill = document.getElementById('tech-capsule-fill');
-      const coreClicker = document.getElementById('tech-core-clicker');
-
-      let mined = 0;
-      let totalSupply = 100000000;
-      let currentCycle = 60 * 60 * 24 * 60;
-
-      function syncCryptoUI() {
-        const ratio = mined / totalSupply;
-        if (techProgressFill) techProgressFill.style.width = `${Math.min(ratio * 100, 100)}%`;
-        if (techTokenFill) techTokenFill.style.width = `${Math.min(ratio * 100, 100)}%`;
-
-        const remainingSeconds = Math.max(0, currentCycle);
-        const days = Math.floor(remainingSeconds / 86400);
-        const hrs = Math.floor((remainingSeconds % 86400) / 3600);
-        const mins = Math.floor((remainingSeconds % 3600) / 60);
-        const secs = remainingSeconds % 60;
-
-        if (techRemaining) techRemaining.textContent = `${days}d ${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-        if (techTokenCount) techTokenCount.textContent = formatK(Math.round(mined));
-        if (techMinedValue) techMinedValue.textContent = formatK(Math.round(mined));
-        if (techProgressText) techProgressText.textContent = `${formatK(mined)} / ${formatK(totalSupply)}`;
-        if (energyValue) energyValue.textContent = state.energy;
-        if (energyMax) energyMax.textContent = state.energyMax;
-        if (tpBalance) tpBalance.textContent = formatK(state.tp);
-        if (energyFill) energyFill.style.width = `${(state.energy / state.energyMax) * 100}%`;
-      }
-
-      if (coreClicker) {
-        coreClicker.addEventListener('click', () => {
-          if (state.energy < 15) {
-            showToast('Brakuje energii! Poczekaj na regenerację.');
-            return;
-          }
-          state.energy = Math.max(0, state.energy - 15);
-          state.tp += 25;
-          mined = Math.min(totalSupply, mined + 25);
-          syncCryptoUI();
-        });
-      }
-
-      syncCryptoUI();
-
-      setInterval(() => {
-        currentCycle = Math.max(0, currentCycle - 1);
-        if (state.energy < state.energyMax) {
-          state.energy = Math.min(state.energyMax, state.energy + 5);
-        }
-        syncCryptoUI();
-      }, 1000);
-    }
-
-    function bindGlobalActions() {
-      document.querySelectorAll('[data-screen]').forEach(button => {
-        button.addEventListener('click', () => {
-          const key = button.dataset.screen;
-          if (key === 'home') show('home', 'Sieć społeczna');
-          if (key === 'crypto') show('crypto', 'TechnixPro');
-          if (key === 'gift') show('gift', 'Bonusy');
-          if (key === 'wallet') show('wallet', 'Portfel');
-          if (key === 'profile') show('profile', 'Profil');
-          if (key === 'menu') show('menu', 'Menu Główne');
-          if (key === 'search') show('search', 'Wyszukiwarka');
-          if (key === 'notifications') show('notifications', 'Powiadomienia');
+          document.getElementById('home-' + target)?.classList.remove('hidden');
         });
       });
 
-      document.querySelectorAll('.claim-reward').forEach(button => {
-        button.addEventListener('click', () => {
-          const reward = Number(button.dataset.bonus || 0);
-          const label = button.dataset.label || 'Nagroda';
-          addStars(reward, label);
+      rewardTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          rewardTabs.forEach(btn => {
+            btn.classList.toggle('active-sub', btn === tab);
+            btn.classList.toggle('text-white', btn === tab);
+            btn.classList.toggle('border-violet-500', btn === tab);
+            btn.classList.toggle('muted', btn !== tab);
+            btn.classList.toggle('border-transparent', btn !== tab);
+          });
+          const target = tab.dataset.rewardTab;
+          document.querySelectorAll('.reward-view').forEach(view => {
+            view.classList.add('hidden');
+          });
+          const el = document.getElementById('reward-' + target);
+          if (el) el.classList.remove('hidden');
         });
       });
-
-      const copyRefBtn = document.getElementById('copy-ref-link');
-      if (copyRefBtn) {
-        copyRefBtn.addEventListener('click', () => {
-          const input = document.getElementById('ref-link-input');
-          if (input) {
-            input.select();
-            document.execCommand('copy');
-            showToast('Link polecający został skopiowany.');
-          }
-        });
-      }
-
-      const pubPostBtn = document.getElementById('publish-post-btn');
-      if (pubPostBtn) pubPostBtn.addEventListener('click', publishChannelPost);
-
-      const createPostBtn = document.getElementById('create-post-btn');
-      if (createPostBtn) createPostBtn.addEventListener('click', createNewPost);
-
-      const saveEventBtn = document.getElementById('save-event-btn');
-      if (saveEventBtn) {
-        saveEventBtn.addEventListener('click', () => {
-          const titleInput = document.getElementById('admin-event-title').value.trim();
-          const descInput = document.getElementById('admin-event-desc').value.trim();
-          const rewardInput = Number(document.getElementById('admin-event-reward').value);
-
-          if (titleInput) state.liveEvent.title = titleInput;
-          if (descInput) state.liveEvent.desc = descInput;
-          if (rewardInput) state.liveEvent.reward = rewardInput;
-
-          document.getElementById('live-event-title').textContent = state.liveEvent.title;
-          document.getElementById('live-event-desc').textContent = state.liveEvent.desc;
-          const eventBtn = document.getElementById('live-event-action-btn');
-          eventBtn.dataset.reward = state.liveEvent.reward;
-          eventBtn.textContent = `Dodaj +${state.liveEvent.reward} ★`;
-
-          showToast('Event live został zaktualizowany.');
-        });
-      }
-
-      const addTaskBtn = document.getElementById('add-task-btn');
-      if (addTaskBtn) {
-        addTaskBtn.addEventListener('click', () => {
-          const titleInput = document.getElementById('admin-new-task-title').value.trim();
-          const rewardInput = Number(document.getElementById('admin-new-task-reward').value);
-
-          if (!titleInput || !rewardInput) {
-            showToast('Wypełnij pola nowego zadania.');
-            return;
-          }
-
-          state.tasks.push({ title: titleInput, reward: rewardInput, label: 'Admin' });
-          renderTaskList();
-          document.getElementById('admin-new-task-title').value = '';
-          document.getElementById('admin-new-task-reward').value = '';
-          showToast('Nowe zadanie zostało dodane do zakładki Zadania.');
-        });
-      }
-
-      document.querySelectorAll('.wallet-toast-btn, .profile-toast-btn').forEach(button => {
-        button.addEventListener('click', () => {
-          const msg = button.textContent.trim() || 'Akcja aktywowana';
-          showToast(`${msg}: moduł w fazie 3.`);
-        });
-      });
-    }
-
-    function seedInitialState() {
-      updateStarsDisplay();
-      renderTaskList();
-      renderRewardLog();
-      renderPostsFeed();
-      renderChannelFeed();
-      renderRigShop();
-      initTelegramProfile();
-      renderHomeSubtabs();
-      renderRewardTabs();
-      bindGlobalActions();
-      initCryptoGame();
-      show('home', 'Sieć społeczna');
-    }
-
-    window.addEventListener('load', seedInitialState);
+    });
   </script>
 </body>
-  </html>
+</html>
