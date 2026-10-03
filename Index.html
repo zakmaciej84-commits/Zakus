@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#080b14" />
-  <title>TechnixPro — Core Engine</title>
+  <title>TechnixPro — Community Hub</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -30,7 +30,7 @@
           }
         }
       }
-    }
+    };
   </script>
   <style>
     :root {
@@ -46,6 +46,8 @@
       --green: #34d399;
       --text: #e5e7eb;
       --muted: #94a3b8;
+      --danger: #f87171;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
     }
 
     * {
@@ -65,34 +67,26 @@
     body {
       min-height: 100vh;
       background:
-        radial-gradient(circle at top, rgba(139, 92, 246, 0.15), transparent 28%),
+        radial-gradient(circle at top, rgba(139, 92, 246, 0.18), transparent 24%),
         radial-gradient(circle at bottom, rgba(34, 211, 238, 0.12), transparent 24%),
         var(--bg);
     }
 
     .muted { color: var(--muted); }
+
     .panel {
-      background: linear-gradient(145deg, rgba(21, 29, 46, 0.72), rgba(13, 19, 32, 0.9));
-      border: 1px solid rgba(39, 52, 77, 0.6);
+      background: linear-gradient(145deg, rgba(21, 29, 46, 0.76), rgba(13, 19, 32, 0.92));
+      border: 1px solid rgba(39, 52, 77, 0.72);
       backdrop-filter: blur(12px);
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+      box-shadow: var(--shadow);
       border-radius: 18px;
-    }
-
-    .subtab {
-      min-width: 33.333%;
-      transition: all 0.2s ease;
-    }
-
-    .active-sub {
-      color: #d9c7ff;
-      border-color: var(--violet);
     }
 
     .nav-btn {
       color: var(--muted);
       transition: all 0.2s ease;
       position: relative;
+      min-width: 0;
     }
 
     .nav-btn.active {
@@ -100,7 +94,7 @@
       transform: translateY(-2px);
     }
 
-    .screen { animation: fadeIn 0.25s cubic-bezier(0.4,0,0.2,1); }
+    .screen { animation: fadeIn 0.25s ease; }
     .scroll-none::-webkit-scrollbar { display: none; }
     .scroll-none { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -129,617 +123,527 @@
       transform: translateX(-50%) translateY(0);
     }
 
-    .admin-modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(2, 6, 23, 0.72);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      padding: 20px;
-    }
-
-    .admin-modal.hidden {
-      display: none;
-    }
-
-    .admin-modal-card {
-      width: min(480px, 100%);
-      background: linear-gradient(180deg, rgba(15,23,42,0.96), rgba(15, 23, 42, 0.9));
-      border: 1px solid rgba(148,163,184,0.18);
-      border-radius: 22px;
-      box-shadow: 0 20px 55px rgba(0,0,0,0.4);
+    .progress-bar {
       overflow: hidden;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      height: 8px;
     }
 
-    .admin-modal-header {
-      display: flex;
+    .pill {
+      display: inline-flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 16px 18px;
-      border-bottom: 1px solid rgba(148,163,184,0.15);
+      gap: 6px;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
     }
 
-    .admin-modal-body {
-      padding: 16px 18px 18px;
-      display: grid;
-      gap: 12px;
+    .pill-live { background: rgba(34, 211, 238, 0.12); color: #67e8f9; border: 1px solid rgba(34, 211, 238, 0.2); }
+    .pill-upcoming { background: rgba(251, 191, 36, 0.12); color: #fcd34d; border: 1px solid rgba(251, 191, 36, 0.2); }
+    .pill-locked { background: rgba(148, 163, 184, 0.08); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.12); }
+    .pill-success { background: rgba(52, 211, 153, 0.12); color: #6ee7b7; border: 1px solid rgba(52, 211, 153, 0.2); }
+
+    .metric-card {
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(148,163,184,0.12);
+      border-radius: 14px;
+      padding: 12px 10px;
     }
 
-    .admin-input {
-      width: 100%;
-      background: rgba(15,23,42,0.9);
-      border: 1px solid rgba(148,163,184,0.18);
-      color: #f8fafc;
-      border-radius: 12px;
-      padding: 10px 12px;
-      font-size: 12px;
-      outline: none;
-    }
-
-    .admin-input:focus {
-      border-color: rgba(34,211,238,0.7);
-      box-shadow: 0 0 0 1px rgba(34,211,238,0.25);
-    }
-
-    .admin-table-scroll {
-      max-height: 240px;
-      overflow: auto;
-    }
+    .tiny { font-size: 10px; }
+    .mini { font-size: 9px; }
+    .divider { border-top: 1px solid rgba(148,163,184,0.12); }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
   </style>
 </head>
 <body>
   <div id="toast" class="floating-toast">Wiadomość</div>
 
-  <div id="admin-modal" class="admin-modal hidden">
-    <div class="admin-modal-card">
-      <div class="admin-modal-header">
-        <div id="admin-modal-title" class="font-bold text-white text-sm">Edytuj</div>
-        <button onclick="app.closeAdminModal()" class="text-slate-300 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div id="admin-modal-body" class="admin-modal-body"></div>
-    </div>
-  </div>
-
   <main class="max-w-md mx-auto w-full min-h-screen bg-[#080b14] flex flex-col relative pb-24 border-x border-slate-900/60 shadow-2xl">
-    
-    <!-- HEADER -->
     <header class="sticky top-0 z-30 flex items-center justify-between px-4 py-3 bg-[#080b14]/90 backdrop-blur-xl border-b border-slate-800/80">
       <div class="flex items-center gap-3">
-        <button onclick="app.switchScreen('profile')" class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 via-indigo-600 to-cyan-400 p-[1.5px] transition active:scale-95 shadow-lg shadow-violet-500/30">
-          <div id="header-avatar" class="w-full h-full bg-[#080b14] rounded-[10.5px] flex items-center justify-center text-lg font-black text-transparent bg-clip-text bg-gradient-to-tr from-violet-400 to-cyan-400">
-            TP
-          </div>
+        <button onclick="app.switchScreen('overview')" class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 via-indigo-600 to-cyan-400 p-[1.5px] transition active:scale-95 shadow-lg shadow-violet-500/30">
+          <div id="header-avatar" class="w-full h-full bg-[#080b14] rounded-[10.5px] flex items-center justify-center text-lg font-black text-transparent bg-clip-text bg-gradient-to-tr from-violet-400 to-cyan-300">TP</div>
         </button>
         <div>
           <p class="text-[9px] uppercase tracking-[0.25em] text-cyan-400 font-bold">TechnixPro</p>
-          <h1 id="header-title" class="text-base font-bold text-white tracking-wide">Sieć społeczna</h1>
+          <h1 id="header-title" class="text-base font-bold text-white tracking-wide">Przegląd</h1>
         </div>
       </div>
       <div class="flex items-center gap-2 muted">
-        <button onclick="app.switchScreen('wallet')" class="w-9 h-9 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-center hover:text-white transition active:scale-95">
+        <button onclick="app.switchScreen('overview')" class="w-9 h-9 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-center hover:text-white transition active:scale-95">
           <span id="stars-header" class="text-xs font-bold text-cyan-400">0⭐</span>
         </button>
       </div>
     </header>
 
-    <!-- NAVIGATION TABS -->
     <nav class="sticky top-[65px] z-20 flex gap-1 bg-[#080b14]/95 backdrop-blur-md border-b border-slate-800/80 px-2 py-2 overflow-x-auto scroll-none">
-      <button onclick="app.switchScreen('home')" class="nav-btn active flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition active:scale-95">
-        <i class="fa-solid fa-home text-lg"></i>
-        <span class="text-[9px] font-bold">Home</span>
+      <button data-screen="overview" class="nav-btn active flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition active:scale-95">
+        <i class="fa-solid fa-chart-line text-lg"></i>
+        <span class="text-[9px] font-bold">Przegląd</span>
       </button>
-      <button onclick="app.switchScreen('crypto')" class="nav-btn flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition active:scale-95">
-        <i class="fa-solid fa-coins text-lg"></i>
-        <span class="text-[9px] font-bold">Mining</span>
+      <button data-screen="event-live" class="nav-btn flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition active:scale-95">
+        <i class="fa-solid fa-signal text-lg"></i>
+        <span class="text-[9px] font-bold">Event Live</span>
       </button>
-      <button onclick="app.switchScreen('gift')" class="nav-btn flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition active:scale-95">
-        <i class="fa-solid fa-gift text-lg"></i>
+      <button data-screen="tasks" class="nav-btn flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition active:scale-95">
+        <i class="fa-solid fa-list-check text-lg"></i>
         <span class="text-[9px] font-bold">Zadania</span>
       </button>
-      <button onclick="app.switchScreen('wallet')" class="nav-btn flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition active:scale-95">
-        <i class="fa-solid fa-wallet text-lg"></i>
-        <span class="text-[9px] font-bold">Portfel</span>
+      <button data-screen="referral" class="nav-btn flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition active:scale-95">
+        <i class="fa-solid fa-user-plus text-lg"></i>
+        <span class="text-[9px] font-bold">Referral</span>
       </button>
-      <button id="nav-admin-btn" onclick="app.switchScreen('admin')" class="nav-btn hidden flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition active:scale-95">
-        <i class="fa-solid fa-shield-halved text-lg"></i>
-        <span class="text-[9px] font-bold">Admin</span>
+      <button data-screen="rewards" class="nav-btn flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition active:scale-95">
+        <i class="fa-solid fa-gift text-lg"></i>
+        <span class="text-[9px] font-bold">Nagrody</span>
       </button>
-      <button onclick="app.switchScreen('menu')" class="nav-btn flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition active:scale-95">
-        <i class="fa-solid fa-bars text-lg"></i>
-        <span class="text-[9px] font-bold">Menu</span>
+      <button data-screen="ranking" class="nav-btn flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition active:scale-95">
+        <i class="fa-solid fa-trophy text-lg"></i>
+        <span class="text-[9px] font-bold">Ranking</span>
+      </button>
+      <button data-screen="history" class="nav-btn flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition active:scale-95">
+        <i class="fa-solid fa-clock-rotate-left text-lg"></i>
+        <span class="text-[9px] font-bold">Historia</span>
+      </button>
+      <button data-screen="ranks" class="nav-btn flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition active:scale-95">
+        <i class="fa-solid fa-award text-lg"></i>
+        <span class="text-[9px] font-bold">Rangi</span>
       </button>
     </nav>
 
-    <!-- CONTENT -->
     <div id="app-content" class="p-4 space-y-4 flex-1 overflow-y-auto scroll-none">
-
-      <!-- HOME SCREEN -->
-      <section id="screen-home" class="screen space-y-4">
+      <section id="screen-overview" class="screen space-y-4">
         <div class="panel p-4 space-y-3">
-          <div class="flex justify-between items-center">
+          <div class="flex justify-between items-start">
             <div>
-              <p class="text-xs muted">Twój saldo:</p>
-              <div class="flex items-baseline gap-2">
-                <span id="stars-total" class="text-3xl font-black text-white">0</span>
-                <span class="text-lg font-bold text-violet-400">⭐</span>
-              </div>
+              <p class="tiny uppercase tracking-[0.25em] text-cyan-400 font-bold">Status profilu</p>
+              <h2 class="text-xl font-black text-white mt-1">Twój profil społeczności</h2>
             </div>
-            <div class="text-right">
-              <span id="level-badge" class="bg-violet-600/30 border border-violet-500/40 text-violet-300 font-extrabold text-xs px-3 py-1 rounded-full">LEVEL 1</span>
+            <span id="overview-rank-badge" class="pill pill-success">Starter</span>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2">
+            <div class="metric-card text-center">
+              <div id="overview-stars" class="text-xl font-black text-cyan-400">0</div>
+              <div class="tiny text-slate-400">⭐</div>
+            </div>
+            <div class="metric-card text-center">
+              <div id="overview-level" class="text-xl font-black text-violet-400">1</div>
+              <div class="tiny text-slate-400">Poziom</div>
+            </div>
+            <div class="metric-card text-center">
+              <div id="overview-streak" class="text-xl font-black text-emerald-400">0</div>
+              <div class="tiny text-slate-400">Dni</div>
             </div>
           </div>
 
-          <div class="space-y-1">
+          <div class="space-y-2">
             <div class="flex justify-between text-[10px] muted">
-              <span>Postęp poziomu</span>
-              <span id="level-progress-text">0 / 1,500 ⭐</span>
+              <span>Postęp do następnego poziomu</span>
+              <span id="overview-progress-text">0 / 1500 ⭐</span>
             </div>
-            <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
-              <div id="level-progress-bar" class="bg-gradient-to-r from-violet-500 to-cyan-400 h-full transition-all duration-500" style="width: 0%"></div>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-3 gap-2 pt-2 text-center">
-            <div class="bg-slate-900/80 rounded-xl p-2.5 border border-slate-800">
-              <span class="block text-sm font-bold text-cyan-400" id="streak-display">0</span>
-              <span class="text-[9px] muted">Dni</span>
-            </div>
-            <div class="bg-slate-900/80 rounded-xl p-2.5 border border-slate-800">
-              <span class="block text-sm font-bold text-violet-400" id="tasks-done">0</span>
-              <span class="text-[9px] muted">Zadania</span>
-            </div>
-            <div class="bg-slate-900/80 rounded-xl p-2.5 border border-slate-800">
-              <span class="block text-sm font-bold text-emerald-400">100%</span>
-              <span class="text-[9px] muted">Aktywność</span>
+            <div class="progress-bar">
+              <div id="overview-progress-bar" class="h-full bg-gradient-to-r from-violet-500 to-cyan-400" style="width:0%"></div>
             </div>
           </div>
         </div>
 
         <div class="panel p-4 space-y-3">
-          <h3 class="text-sm font-bold text-white">Szybkie akcje</h3>
-          <button onclick="app.claimDailyBonus()" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-semibold text-sm py-3 rounded-xl transition active:scale-95">
-            <i class="fa-solid fa-calendar-check mr-2"></i> Bonus Dzienny (+25⭐)
-          </button>
-          <button onclick="app.switchScreen('gift')" class="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-semibold text-sm py-3 rounded-xl transition active:scale-95">
-            <i class="fa-solid fa-tasks mr-2"></i> Wykonaj Zadania
-          </button>
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-white">Aktywność społeczności</h3>
+            <span class="pill pill-live">Live</span>
+          </div>
+          <div id="overview-activity" class="space-y-2"></div>
         </div>
 
         <div class="panel p-4 space-y-3">
-          <h3 class="text-sm font-bold text-white">📰 Ostatnie posty</h3>
-          <div id="feed-posts" class="space-y-2"></div>
+          <h3 class="text-sm font-bold text-white">Najbliższe wydarzenia</h3>
+          <div id="overview-events" class="space-y-2"></div>
         </div>
       </section>
 
-      <!-- MINING SCREEN -->
-      <section id="screen-crypto" class="screen hidden space-y-4">
+      <section id="screen-event-live" class="screen hidden space-y-4">
+        <div class="panel p-4 space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="tiny uppercase tracking-[0.25em] text-cyan-400 font-bold">Event Hub</p>
+              <h2 class="text-lg font-bold text-white">Event Live</h2>
+            </div>
+            <span class="pill pill-live">On Air</span>
+          </div>
+        </div>
+
+        <div id="event-live-list" class="space-y-3"></div>
+      </section>
+
+      <section id="screen-tasks" class="screen hidden space-y-4">
+        <div class="panel p-4 space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="tiny uppercase tracking-[0.25em] text-cyan-400 font-bold">Misje</p>
+              <h2 class="text-lg font-bold text-white">Zadania</h2>
+            </div>
+            <span id="tasks-completed-badge" class="pill pill-success">0/0</span>
+          </div>
+          <p class="text-xs muted">Ukończ zadania, zdobywaj punkty i rozwijaj status w społeczności.</p>
+        </div>
+        <div id="tasks-list" class="space-y-3"></div>
+      </section>
+
+      <section id="screen-referral" class="screen hidden space-y-4">
         <div class="panel p-4 space-y-4">
-          <div class="flex justify-between items-center">
+          <div class="flex items-center justify-between">
             <div>
-              <p class="text-[9px] uppercase tracking-[0.25em] text-cyan-300 font-bold">Mining Engine</p>
-              <h2 class="text-lg font-bold text-white">Wydobycie TP</h2>
+              <p class="tiny uppercase tracking-[0.25em] text-cyan-400 font-bold">Zaproszenia</p>
+              <h2 class="text-lg font-bold text-white">Referral</h2>
             </div>
-            <div class="text-right">
-              <span id="mining-rate" class="text-xl font-black text-cyan-400">+0⭐/h</span>
-              <p class="text-[9px] muted">na godzinę</p>
+            <span class="pill pill-success">+10% bonus</span>
+          </div>
+
+          <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-3">
+            <div class="text-[10px] muted mb-2">Twój kod polecenia</div>
+            <div class="flex gap-2 items-center">
+              <input id="ref-link" readonly class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200" value="" />
+              <button onclick="app.copyReferralLink()" class="bg-cyan-500 text-slate-950 font-bold text-xs px-3 py-2 rounded-xl">Kopiuj</button>
             </div>
           </div>
 
-          <div class="bg-gradient-to-b from-slate-800 to-slate-900 rounded-2xl p-6 flex flex-col items-center text-center border border-slate-700">
-            <div id="mining-click-zone" class="w-32 h-32 rounded-full bg-gradient-to-br from-cyan-500/20 to-violet-500/20 border-2 border-cyan-400 flex items-center justify-center cursor-pointer hover:scale-105 transition active:scale-95">
-              <span class="text-5xl font-black text-cyan-400">TP</span>
+          <div class="grid grid-cols-3 gap-2">
+            <div class="metric-card text-center">
+              <div id="ref-friends" class="text-lg font-black text-cyan-400">0</div>
+              <div class="tiny text-slate-400">Zaproszeń</div>
             </div>
-            <p id="click-feedback" class="text-xs text-emerald-400 mt-4 min-h-[20px]"></p>
+            <div class="metric-card text-center">
+              <div id="ref-earnings" class="text-lg font-black text-violet-400">0</div>
+              <div class="tiny text-slate-400">⭐</div>
+            </div>
+            <div class="metric-card text-center">
+              <div id="ref-ctr" class="text-lg font-black text-emerald-400">0%</div>
+              <div class="tiny text-slate-400">CTR</div>
+            </div>
           </div>
+        </div>
 
-          <div class="space-y-2">
-            <div class="flex justify-between text-[10px] muted">
-              <span>Energią</span>
-              <span id="energy-text">1000 / 1000</span>
-            </div>
-            <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden">
-              <div id="energy-bar" class="bg-gradient-to-r from-cyan-400 to-violet-500 h-full transition-all duration-200" style="width: 100%"></div>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-2">
-            <div class="bg-slate-900/80 rounded-xl p-3 border border-slate-800 text-center">
-              <span class="block text-[10px] muted">Całkowicie wydobyto</span>
-              <strong id="total-mined" class="text-lg text-cyan-400">0 ⭐</strong>
-            </div>
-            <div class="bg-slate-900/80 rounded-xl p-3 border border-slate-800 text-center">
-              <span class="block text-[10px] muted">Limit emisji</span>
-              <strong class="text-lg text-violet-400">1M ⭐</strong>
-            </div>
-          </div>
+        <div class="panel p-4 space-y-3">
+          <h3 class="text-sm font-bold text-white">Oto jak to działa</h3>
+          <div id="ref-steps" class="space-y-2"></div>
         </div>
       </section>
 
-      <!-- TASKS SCREEN -->
-      <section id="screen-gift" class="screen hidden space-y-4">
+      <section id="screen-rewards" class="screen hidden space-y-4">
         <div class="panel p-4 space-y-3">
-          <h2 class="text-lg font-bold text-white">Zadania</h2>
-          <p class="text-xs muted">Wykonaj zadania, aby zdobyć dodatkowe ⭐</p>
-        </div>
-
-        <div id="tasks-container" class="space-y-3"></div>
-      </section>
-
-      <!-- WALLET SCREEN -->
-      <section id="screen-wallet" class="screen hidden space-y-4">
-        <div class="panel p-5 text-center space-y-3">
-          <p class="text-xs muted">Portfel TON</p>
-          <div class="text-3xl font-extrabold text-white tracking-tight" id="wallet-balance">0.00 TON</div>
-          <div class="flex justify-center gap-2 pt-2">
-            <button onclick="app.connectTonKeeper()" class="bg-violet-600 text-xs font-semibold px-4 py-2 rounded-xl hover:bg-violet-500 transition active:scale-95">
-              <i class="fa-solid fa-link mr-2"></i> Połącz TON Keeper
-            </button>
-          </div>
-        </div>
-
-        <div class="panel p-4 space-y-3">
-          <h3 class="text-sm font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-wallet text-cyan-400"></i> Stan Portfela
-          </h3>
-          <div id="wallet-address" class="bg-slate-900/80 rounded-xl p-3 text-xs text-slate-300">
-            <span class="block muted mb-1">Adres:</span>
-            <span id="addr-display">Brak połączenia</span>
-          </div>
-          <div class="bg-slate-900/80 rounded-xl p-3 text-xs">
-            <span class="block muted mb-1">Status:</span>
-            <span id="wallet-status" class="text-amber-400">Odłączony</span>
-          </div>
-        </div>
-
-        <div class="panel p-4 space-y-3">
-          <h3 class="text-sm font-bold text-white">Zamień ⭐ na TON</h3>
-          <div class="flex gap-2">
-            <input id="stars-to-swap" type="number" placeholder="Ilość ⭐" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500" />
-            <button onclick="app.swapStarsToTon()" class="bg-gradient-to-r from-cyan-500 to-violet-500 text-white font-semibold text-xs px-4 py-2 rounded-xl transition active:scale-95">
-              Zamień
-            </button>
-          </div>
-          <p class="text-[10px] muted">1 ⭐ = 0.001 TON (kuratorski)</p>
-        </div>
-      </section>
-
-      <!-- PROFILE SCREEN -->
-      <section id="screen-profile" class="screen hidden space-y-4">
-        <div class="panel p-5 text-center space-y-3">
-          <div class="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-violet-600 via-indigo-600 to-cyan-400 p-[2px]">
-            <div id="profile-avatar" class="w-full h-full bg-[#080b14] rounded-[18px] flex items-center justify-center text-4xl font-black text-transparent bg-clip-text bg-gradient-to-tr from-violet-400 to-cyan-400">
-              TP
-            </div>
-          </div>
-          <div>
-            <h2 id="profile-name" class="text-xl font-bold text-white">@User</h2>
-            <p id="profile-id" class="text-xs muted">ID: 0</p>
-          </div>
-        </div>
-
-        <div class="panel p-4 space-y-3">
-          <h3 class="text-sm font-bold text-white">Statystyki</h3>
-          <div class="grid grid-cols-2 gap-2">
-            <div class="bg-slate-900/80 rounded-xl p-3 border border-slate-800">
-              <span class="block text-[10px] muted">Całkowite ⭐</span>
-              <strong id="profile-total-stars" class="text-lg text-cyan-400">0</strong>
-            </div>
-            <div class="bg-slate-900/80 rounded-xl p-3 border border-slate-800">
-              <span class="block text-[10px] muted">Poziom</span>
-              <strong id="profile-level" class="text-lg text-violet-400">1</strong>
-            </div>
-            <div class="bg-slate-900/80 rounded-xl p-3 border border-slate-800">
-              <span class="block text-[10px] muted">Zadań wykonanych</span>
-              <strong id="profile-tasks" class="text-lg text-emerald-400">0</strong>
-            </div>
-            <div class="bg-slate-900/80 rounded-xl p-3 border border-slate-800">
-              <span class="block text-[10px] muted">Dni aktywności</span>
-              <strong id="profile-days" class="text-lg text-amber-400">0</strong>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel p-4 space-y-3">
-          <h3 class="text-sm font-bold text-white">Link polecania</h3>
-          <div class="flex items-center gap-2">
-            <input id="ref-link" type="text" readonly class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-300" />
-            <button onclick="app.copyRefLink()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs px-3 py-2 rounded-xl transition active:scale-95">
-              Kopiuj
-            </button>
-          </div>
-        </div>
-
-        <div class="panel p-4 space-y-3">
-          <button onclick="app.logout()" class="w-full bg-red-600 hover:bg-red-500 text-white font-semibold text-sm py-2 rounded-xl transition active:scale-95">
-            <i class="fa-solid fa-sign-out-alt mr-2"></i> Wyloguj
-          </button>
-        </div>
-      </section>
-
-      <!-- MENU SCREEN -->
-      <section id="screen-menu" class="screen hidden space-y-4">
-        <div class="panel p-4 space-y-3">
-          <h2 class="text-lg font-bold text-white">Menu</h2>
-          <div class="space-y-2">
-            <button onclick="app.switchScreen('profile')" class="w-full text-left px-4 py-2 bg-slate-900/50 hover:bg-slate-800 rounded-xl transition text-sm text-slate-200">
-              <i class="fa-solid fa-user mr-2 text-cyan-400"></i> Profil
-            </button>
-            <button onclick="app.switchScreen('wallet')" class="w-full text-left px-4 py-2 bg-slate-900/50 hover:bg-slate-800 rounded-xl transition text-sm text-slate-200">
-              <i class="fa-solid fa-wallet mr-2 text-cyan-400"></i> Portfel
-            </button>
-            <button onclick="window.open('https://t.me/TechnixProBot', '_blank')" class="w-full text-left px-4 py-2 bg-slate-900/50 hover:bg-slate-800 rounded-xl transition text-sm text-slate-200">
-              <i class="fa-brands fa-telegram mr-2 text-cyan-400"></i> Support Telegram
-            </button>
-            <button onclick="app.showSettings()" class="w-full text-left px-4 py-2 bg-slate-900/50 hover:bg-slate-800 rounded-xl transition text-sm text-slate-200">
-              <i class="fa-solid fa-cog mr-2 text-cyan-400"></i> Ustawienia
-            </button>
-          </div>
-        </div>
-
-        <div class="panel p-4 space-y-2 text-center">
-          <p class="text-[9px] muted">TechnixPro v2.7 Edge</p>
-          <p class="text-[10px] text-slate-400">© 2026 — Integracja Telegram x TON</p>
-        </div>
-      </section>
-
-      <!-- ADMIN SCREEN -->
-      <section id="screen-admin" class="screen hidden space-y-4">
-        <div class="panel p-4 space-y-3">
-          <div class="flex justify-between items-center">
+          <div class="flex items-center justify-between">
             <div>
-              <p class="text-[9px] uppercase tracking-[0.25em] text-cyan-300 font-bold">Administrator</p>
-              <h2 class="text-lg font-bold text-white">Panel zarządzania</h2>
+              <p class="tiny uppercase tracking-[0.25em] text-cyan-400 font-bold">Bonusy</p>
+              <h2 class="text-lg font-bold text-white">Nagrody</h2>
             </div>
-            <div class="text-right">
-              <button onclick="app.reloadAdminData()" class="bg-slate-800 px-3 py-1 rounded-lg text-xs muted">Odśwież</button>
-            </div>
-          </div>
-          <div class="grid grid-cols-2 gap-2">
-            <div class="bg-slate-900/80 rounded-xl p-4 border border-slate-800">
-              <div class="text-[10px] muted">Użytkownicy</div>
-              <div id="admin-users-count" class="text-2xl font-bold text-cyan-400">0</div>
-            </div>
-            <div class="bg-slate-900/80 rounded-xl p-4 border border-slate-800">
-              <div class="text-[10px] muted">Aktywne transakcje</div>
-              <div id="admin-tx-count" class="text-2xl font-bold text-violet-400">0</div>
-            </div>
+            <span class="pill pill-upcoming">Dostępne</span>
           </div>
         </div>
+        <div id="rewards-list" class="space-y-3"></div>
+      </section>
 
+      <section id="screen-ranking" class="screen hidden space-y-4">
         <div class="panel p-4 space-y-3">
-          <h3 class="text-sm font-bold text-white">Zarządzanie użytkownikami</h3>
-          <div class="mb-2 flex gap-2">
-            <input id="admin-user-search" type="text" placeholder="Szukaj po ID / username / email" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500" />
-            <button onclick="app.adminSearchUsers()" class="bg-cyan-500 px-3 py-2 rounded-xl text-xs font-semibold text-slate-950">Szukaj</button>
-          </div>
-          <div id="admin-users-list" class="space-y-2 admin-table-scroll"></div>
-        </div>
-
-        <div class="panel p-4 space-y-3">
-          <h3 class="text-sm font-bold text-white">Zadania (Tasks)</h3>
-          <div id="admin-tasks-list" class="space-y-2 admin-table-scroll"></div>
-          <div class="flex gap-2 pt-2">
-            <button onclick="app.openNewTaskModal()" class="bg-violet-600 px-3 py-2 rounded-xl text-xs font-semibold">Nowe zadanie</button>
-            <button onclick="app.reloadAdminData()" class="bg-slate-800 px-3 py-2 rounded-xl text-xs muted">Odśwież</button>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <div class="panel p-4 space-y-3">
-            <h3 class="text-sm font-bold text-white">Posty</h3>
-            <div id="admin-posts-list" class="space-y-2 admin-table-scroll"></div>
-            <button onclick="app.openNewPostModal()" class="bg-emerald-600 px-3 py-2 rounded-xl text-xs font-semibold w-full">Dodaj post</button>
-          </div>
-          <div class="panel p-4 space-y-3">
-            <h3 class="text-sm font-bold text-white">Transakcje / Portfele</h3>
-            <div id="admin-tx-list" class="space-y-2 admin-table-scroll"></div>
-            <div class="flex gap-2 pt-2">
-              <button onclick="app.adminExportCsv()" class="bg-emerald-600 px-3 py-2 rounded-xl text-xs font-semibold w-full">Eksport CSV</button>
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="tiny uppercase tracking-[0.25em] text-cyan-400 font-bold">Leaderboard</p>
+              <h2 class="text-lg font-bold text-white">Ranking</h2>
             </div>
+            <span class="pill pill-live">Tydzień</span>
           </div>
         </div>
+        <div id="ranking-list" class="space-y-2"></div>
+      </section>
 
+      <section id="screen-history" class="screen hidden space-y-4">
         <div class="panel p-4 space-y-3">
-          <h3 class="text-sm font-bold text-white">Logi audytu</h3>
-          <div id="admin-logs" class="text-xs muted max-h-56 overflow-auto"></div>
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="tiny uppercase tracking-[0.25em] text-cyan-400 font-bold">Historia</p>
+              <h2 class="text-lg font-bold text-white">Ostatnie aktywności</h2>
+            </div>
+            <span class="pill pill-upcoming">Zaktualizowano</span>
+          </div>
         </div>
+        <div id="history-list" class="space-y-3"></div>
+      </section>
+
+      <section id="screen-ranks" class="screen hidden space-y-4">
+        <div class="panel p-4 space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="tiny uppercase tracking-[0.25em] text-cyan-400 font-bold">System</p>
+              <h2 class="text-lg font-bold text-white">Rangi</h2>
+            </div>
+            <span class="pill pill-success">Aktywny</span>
+          </div>
+        </div>
+        <div id="ranks-list" class="space-y-3"></div>
       </section>
     </div>
   </main>
 
   <script>
     const app = {
-      user: null,
-      gameState: {
-        stars: 0,
-        level: 1,
-        energy: 1000,
-        maxEnergy: 1000,
-        tasksCompleted: 0,
-        streakDays: 0,
-        totalMined: 0,
-        lastDailyBonus: null,
-        referralCode: null,
-        walletConnected: false,
-        walletAddress: null,
-        tonBalance: 0
+      user: {
+        id: 248910,
+        username: 'demo_user',
+        first_name: 'Demo',
+        is_admin: false,
+        role: 'member'
       },
 
-      tasks: [
-        { id: 1, title: 'Kliknij 100 razy', description: 'Klikaj na rdzeń TP', reward: 50, type: 'clicks', target: 100, progress: 0 },
-        { id: 2, title: 'Zaproszenie przyjaciela', description: 'Zaproś jedną osobę z twojego linku', reward: 100, type: 'referral', target: 1, progress: 0 },
-        { id: 3, title: 'Połącz portfel TON', description: 'Dodaj Tonkeeper do aplikacji', reward: 75, type: 'wallet', target: 1, progress: 0 },
-        { id: 4, title: 'Połącz Telegram Stars', description: 'Włącz płatności Telegram Stars', reward: 60, type: 'stars', target: 1, progress: 0 },
-        { id: 5, title: 'Zbieraj 7 dni', description: 'Loguj się przez 7 dni z rzędu', reward: 150, type: 'streak', target: 7, progress: 0 }
-      ],
-
-      posts: [
-        { id: 1, author: 'Admin', text: '🚀 TechnixPro oficjalnie uruchomiony!', time: 'dziś' },
-        { id: 2, author: 'Admin', text: '⭐ Zarabiaj poprzez klikanie i zadania', time: 'wczoraj' }
-      ],
-
-      users: [],
-      transactions: [],
-      logs: [],
-
-      initTelegram() {
-        const tg = window.Telegram?.WebApp;
-        if (!tg) {
-          console.warn('Telegram WebApp SDK niedostępny');
-          this.user = { id: 123456, first_name: 'Demo', username: 'testuser', is_admin: true, role: 'admin' };
-          this.gameState.referralCode = `ref_${this.user.id}`;
-          this.ensureAdminDataSeed();
-          return;
-        }
-
-        tg.ready();
-        this.user = tg.initDataUnsafe?.user || { id: 123456, first_name: 'Demo', username: 'testuser', is_admin: true, role: 'admin' };
-        this.user.is_admin = true;
-        this.user.role = this.user.role || 'admin';
-        this.gameState.referralCode = `ref_${this.user.id}`;
-
-        tg.setHeaderColor('#080b14');
-        tg.setBackgroundColor('#080b14');
-        tg.enableClosingConfirmation();
-
-        if (tg.onEvent) {
-          tg.onEvent('invoiceClosed', (data) => {
-            if (data.status === 'paid') {
-              this.showToast('✅ Płatność potwierdzona!');
-            }
-          });
-        }
-
-        this.ensureAdminDataSeed();
+      state: {
+        stars: 1280,
+        level: 4,
+        streakDays: 12,
+        tasksCompleted: 6,
+        referralFriends: 18,
+        referralEarnings: 340,
+        activity: 86,
+        rank: 'Starter',
+        eventsJoined: 2,
+        history: [],
+        tasks: [],
+        rewards: [],
+        leaderboard: [],
+        ranks: [],
+        events: []
       },
 
-      ensureAdminDataSeed() {
-        if (!this.users.length) {
-          this.users = [
-            {
-              id: this.user?.id || 1,
-              username: this.user?.username || this.user?.first_name || 'demo_user',
-              email: 'admin@technixpro.app',
-              stars: this.gameState.stars,
-              level: this.gameState.level,
-              role: 'admin',
-              status: 'active',
-              createdAt: new Date().toISOString()
-            }
-          ];
-        }
-
-        if (!this.transactions.length) {
-          this.transactions = [
-            { id: 'tx_1', type: 'claim', userId: this.user?.id || 1, amount: 25, currency: '⭐', status: 'completed', timestamp: new Date().toISOString() },
-            { id: 'tx_2', type: 'wallet', userId: this.user?.id || 1, amount: 0.12, currency: 'TON', status: 'completed', timestamp: new Date().toISOString() }
-          ];
-        }
-
-        if (!this.logs.length) {
-          this.logs = [
-            { id: 'log_1', actor: 'system', action: 'system_initialized', timestamp: new Date().toISOString(), details: 'TechnixPro admin panel initialized' },
-            { id: 'log_2', actor: 'admin', action: 'daily_bonus_awarded', timestamp: new Date().toISOString(), details: 'Bonus został przyznany użytkownikowi' }
-          ];
-        }
+      init() {
+        this.loadData();
+        this.seed();
+        this.bindNavigation();
+        this.renderAll();
       },
 
-      render() {
-        document.getElementById('stars-total').textContent = this.gameState.stars;
-        document.getElementById('stars-header').textContent = `${this.gameState.stars}⭐`;
-
-        document.getElementById('level-badge').textContent = `LEVEL ${this.gameState.level}`;
-        document.getElementById('profile-level').textContent = this.gameState.level;
-
-        const nextLevelStars = this.gameState.level * 1500;
-        const progress = (this.gameState.stars % 1500) / 1500 * 100;
-        document.getElementById('level-progress-bar').style.width = progress + '%';
-        document.getElementById('level-progress-text').textContent = `${this.gameState.stars} / ${nextLevelStars} ⭐`;
-
-        const energyPercent = (this.gameState.energy / this.gameState.maxEnergy) * 100;
-        document.getElementById('energy-bar').style.width = energyPercent + '%';
-        document.getElementById('energy-text').textContent = `${this.gameState.energy} / ${this.gameState.maxEnergy}`;
-
-        document.getElementById('streak-display').textContent = this.gameState.streakDays;
-        document.getElementById('tasks-done').textContent = this.gameState.tasksCompleted;
-        document.getElementById('total-mined').textContent = this.gameState.totalMined + ' ⭐';
-        document.getElementById('profile-total-stars').textContent = this.gameState.stars;
-        document.getElementById('profile-tasks').textContent = this.gameState.tasksCompleted;
-        document.getElementById('profile-days').textContent = this.gameState.streakDays;
-
-        const username = this.user?.username || this.user?.first_name || 'User';
-        document.getElementById('header-title').textContent = username;
-        document.getElementById('profile-name').textContent = '@' + username;
-        document.getElementById('profile-id').textContent = 'ID: ' + (this.user?.id || 0);
-        document.getElementById('ref-link').value = `https://t.me/TechnixProBot?start=${this.gameState.referralCode}`;
-
-        if (this.gameState.walletConnected) {
-          document.getElementById('wallet-address').innerHTML = `<span class="block muted mb-1">Adres:</span><span>${this.gameState.walletAddress?.slice(0, 10)}...${this.gameState.walletAddress?.slice(-8)}</span>`;
-          document.getElementById('wallet-status').textContent = '✅ Połączony';
-          document.getElementById('wallet-status').className = 'text-emerald-400';
-        }
-        document.getElementById('wallet-balance').textContent = this.gameState.tonBalance.toFixed(2) + ' TON';
-
-        this.renderPosts();
-        this.renderTasks();
-        this.updateMiningRate();
-
-        this.save();
-        this.ensureAdminUI();
-        this.renderAdmin();
+      bindNavigation() {
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+          btn.addEventListener('click', () => this.switchScreen(btn.dataset.screen));
+        });
       },
 
-      renderPosts() {
-        const feed = document.getElementById('feed-posts');
-        feed.innerHTML = this.posts.map(post => `
-          <div class="bg-slate-900/50 rounded-xl p-3 border border-slate-800">
-            <div class="flex justify-between items-start">
-              <strong class="text-xs text-cyan-400">${post.author}</strong>
-              <span class="text-[9px] muted">${post.time}</span>
+      seed() {
+        this.state.tasks = [
+          { id: 'daily-checkin', title: 'Dzienne logowanie', description: 'Wejdź do aplikacji i potwierdź aktywność', reward: 25, progress: 1, target: 1, type: 'daily', category: 'Daily', completed: true },
+          { id: 'invite-friend', title: 'Zaproś znajomego', description: 'Udostępnij kod polecenia i zarejestruj 1 osobę', reward: 120, progress: 1, target: 1, type: 'referral', category: 'Referral', completed: true },
+          { id: 'event-participation', title: 'Weź udział w wydarzeniu', description: 'Dołącz do Event Live i aktywnie uczestnicz', reward: 80, progress: 2, target: 3, type: 'event', category: 'Community', completed: false },
+          { id: 'community-post', title: 'Zaangażuj się w społeczność', description: 'Dodaj komentarz lub udział w dyskusji', reward: 60, progress: 0, target: 1, type: 'social', category: 'Social', completed: false },
+          { id: 'wallet-connect', title: 'Połącz portfel', description: 'Podłącz Tonkeeper lub inny portfel', reward: 75, progress: 1, target: 1, type: 'wallet', category: 'Wallet', completed: true },
+          { id: 'streak-7', title: '7-dniowa seria', description: 'Utrzymuj aktywność przez 7 kolejnych dni', reward: 150, progress: 4, target: 7, type: 'streak', category: 'Streak', completed: false }
+        ];
+
+        this.state.rewards = [
+          { id: 'badge-elite', title: 'Profil Elite', description: 'Układ profilu premium z efektem neon', reward: 250, unlocked: true, badge: 'Premium', icon: 'fa-solid fa-vr-cardboard' },
+          { id: 'avatar-spark', title: 'Avatar Spark', description: 'Kolorowy avatar z animacją aktywności', reward: 420, unlocked: false, badge: 'Avatar', icon: 'fa-solid fa-sparkles' },
+          { id: 'boost-1', title: 'Boost XP x2', description: 'Dodatkowy multiplier poziomów na 7 dni', reward: 560, unlocked: false, badge: 'Boost', icon: 'fa-solid fa-rocket' },
+          { id: 'community-kit', title: 'Community Kit', description: 'Zestaw perków społecznościowych', reward: 780, unlocked: false, badge: 'Ograniczone', icon: 'fa-solid fa-shield-heart' }
+        ];
+
+        this.state.events = [
+          {
+            id: 'event-01',
+            title: 'Community Sprint',
+            description: 'Aktywne zadania z bonusami szybkości i rozwoju społeczności.',
+            status: 'live',
+            timeLeft: '03:18:29',
+            participants: 1214,
+            progress: 78,
+            reward: '120 ⭐',
+            accent: 'from-cyan-500 to-violet-500'
+          },
+          {
+            id: 'event-02',
+            title: 'Referral Rush',
+            description: 'Zaproś nowych użytkowników i zdobywaj bonusy za każdy poziom.',
+            status: 'live',
+            timeLeft: '06:44:10',
+            participants: 892,
+            progress: 64,
+            reward: '150 ⭐',
+            accent: 'from-violet-500 to-pink-500'
+          },
+          {
+            id: 'event-03',
+            title: 'Weekend Boost',
+            description: 'Bonusowe środy i wydłużone nagrody za każdą aktywność.',
+            status: 'upcoming',
+            timeLeft: '19:12:00',
+            participants: 640,
+            progress: 41,
+            reward: '200 ⭐',
+            accent: 'from-amber-400 to-emerald-500'
+          }
+        ];
+
+        this.state.leaderboard = [
+          { rank: 1, name: '@nora_tech', stars: 6420, level: 18, badge: 'Legend' },
+          { rank: 2, name: '@tomax', stars: 5890, level: 16, badge: 'Elite' },
+          { rank: 3, name: '@luna9', stars: 5220, level: 15, badge: 'Elite' },
+          { rank: 4, name: '@demo_user', stars: 1280, level: 4, badge: 'Starter' },
+          { rank: 5, name: '@michal', stars: 1180, level: 4, badge: 'Starter' }
+        ];
+
+        this.state.ranks = [
+          { name: 'Starter', min: 0, max: 1499, color: 'text-cyan-400', icon: 'fa-solid fa-seedling', description: 'Rozpoczęcie w społeczności' },
+          { name: 'Explorer', min: 1500, max: 2999, color: 'text-violet-400', icon: 'fa-solid fa-compass', description: 'Aktywny uczestnik i pierwsze sukcesy' },
+          { name: 'Elite', min: 3000, max: 5999, color: 'text-pink-400', icon: 'fa-solid fa-crown', description: 'Użytkownik z realnym wpływem' },
+          { name: 'Legend', min: 6000, max: 9999, color: 'text-amber-400', icon: 'fa-solid fa-medal', description: 'Mistrz społeczności i lider' }
+        ];
+
+        this.state.history = [
+          { type: 'bonus', title: 'Bonus dzienny', value: '+25 ⭐', time: '2 godziny temu' },
+          { type: 'mission', title: 'Zadanie: Zaproś znajomego', value: '+120 ⭐', time: 'Dziś, 09:12' },
+          { type: 'event', title: 'Udział w Community Sprint', value: '+80 ⭐', time: 'Wczoraj' },
+          { type: 'reward', title: 'Odebrano: Profil Elite', value: 'Prywatny perk', time: '3 dni temu' },
+          { type: 'wallet', title: 'Zamiana na TON', value: '-320 ⭐', time: '1 tydzień temu' }
+        ];
+      },
+
+      switchScreen(screen) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+        const target = document.getElementById(`screen-${screen}`);
+        if (target) target.classList.remove('hidden');
+
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+        const active = document.querySelector(`.nav-btn[data-screen="${screen}"]`);
+        if (active) active.classList.add('active');
+
+        const labels = {
+          overview: 'Przegląd',
+          'event-live': 'Event Live',
+          tasks: 'Zadania',
+          referral: 'Referral',
+          rewards: 'Nagrody',
+          ranking: 'Ranking',
+          history: 'Historia',
+          ranks: 'Rangi'
+        };
+
+        document.getElementById('header-title').textContent = labels[screen] || 'Przegląd';
+      },
+
+      renderOverview() {
+        const nextLevel = this.state.level * 1500;
+        const progress = ((this.state.stars % 1500) / 1500) * 100;
+        document.getElementById('overview-stars').textContent = this.state.stars;
+        document.getElementById('overview-level').textContent = this.state.level;
+        document.getElementById('overview-streak').textContent = this.state.streakDays;
+        document.getElementById('overview-progress-text').textContent = `${this.state.stars} / ${nextLevel} ⭐`;
+        document.getElementById('overview-progress-bar').style.width = `${Math.min(progress, 100)}%`;
+        document.getElementById('overview-rank-badge').textContent = this.state.rank;
+
+        const activity = [
+          { label: 'Aktywność', value: `${this.state.activity}%`, color: 'bg-cyan-400' },
+          { label: 'Eventy', value: `${this.state.eventsJoined} / 5`, color: 'bg-violet-400' },
+          { label: 'Zadania', value: `${this.state.tasksCompleted} / 12`, color: 'bg-emerald-400' }
+        ];
+
+        document.getElementById('overview-activity').innerHTML = activity.map(item => `
+          <div class="space-y-1">
+            <div class="flex justify-between text-[10px] muted">
+              <span>${item.label}</span>
+              <span>${item.value}</span>
             </div>
-            <p class="text-xs text-slate-200 mt-1">${post.text}</p>
+            <div class="progress-bar">
+              <div class="h-full ${item.color} rounded-full" style="width:${item.label === 'Aktywność' ? this.state.activity : item.value.includes('/') ? Math.min((parseInt(item.value.split('/')[0]) / parseInt(item.value.split('/')[1])) * 100, 100) : 50}%"></div>
+            </div>
+          </div>
+        `).join('');
+
+        const nextEvents = this.state.events.slice(0, 3);
+        document.getElementById('overview-events').innerHTML = nextEvents.map(event => `
+          <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-3">
+            <div class="flex justify-between items-center gap-2">
+              <strong class="text-xs text-white">${event.title}</strong>
+              <span class="pill ${event.status === 'live' ? 'pill-live' : 'pill-upcoming'}">${event.status === 'live' ? 'LIVE' : 'Soon'}</span>
+            </div>
+            <div class="mt-2 flex justify-between text-[10px] muted">
+              <span>${event.participants} uczestników</span>
+              <span>${event.timeLeft}</span>
+            </div>
+          </div>
+        `).join('');
+      },
+
+      renderEventLive() {
+        const list = document.getElementById('event-live-list');
+        list.innerHTML = this.state.events.map(event => `
+          <div class="panel p-4 space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-sm font-bold text-white">${event.title}</h3>
+                <p class="text-[10px] muted mt-1">${event.description}</p>
+              </div>
+              <span class="pill ${event.status === 'live' ? 'pill-live' : 'pill-upcoming'}">${event.status === 'live' ? 'Live' : 'Wkrótce'}</span>
+            </div>
+
+            <div class="bg-gradient-to-r ${event.accent} rounded-2xl p-3 text-white">
+              <div class="flex justify-between text-[10px] font-semibold uppercase tracking-[0.2em] opacity-90">
+                <span>Reward</span>
+                <span>${event.timeLeft}</span>
+              </div>
+              <div class="mt-2 text-2xl font-black">${event.reward}</div>
+            </div>
+
+            <div class="space-y-2">
+              <div class="flex justify-between text-[10px] muted">
+                <span>Uczestnicy</span>
+                <span>${event.participants}</span>
+              </div>
+              <div class="progress-bar">
+                <div class="h-full bg-gradient-to-r from-cyan-500 to-violet-500 rounded-full" style="width:${event.progress}%"></div>
+              </div>
+            </div>
+
+            <button onclick="app.joinEvent('${event.id}')" class="w-full rounded-xl ${event.status === 'live' ? 'bg-gradient-to-r from-cyan-500 to-violet-500' : 'bg-slate-700'} text-white text-xs font-semibold py-2.5">
+              ${event.status === 'live' ? 'Dołącz teraz' : 'Zarezerwuj udział'}
+            </button>
           </div>
         `).join('');
       },
 
       renderTasks() {
-        const container = document.getElementById('tasks-container');
-        container.innerHTML = this.tasks.map(task => {
-          const done = task.progress >= task.target;
+        const total = this.state.tasks.length;
+        const completed = this.state.tasks.filter(task => task.completed).length;
+        document.getElementById('tasks-completed-badge').textContent = `${completed}/${total}`;
+
+        const list = document.getElementById('tasks-list');
+        list.innerHTML = this.state.tasks.map(task => {
+          const done = task.completed || task.progress >= task.target;
+          const width = Math.min((task.progress / task.target) * 100, 100);
           return `
-            <div class="panel p-4 space-y-2 ${done ? 'opacity-60' : ''}">
-              <div class="flex justify-between items-start">
+            <div class="panel p-4 space-y-2 ${done ? 'opacity-90' : ''}">
+              <div class="flex justify-between items-start gap-3">
                 <div>
-                  <h3 class="text-sm font-bold text-white">${task.title}</h3>
-                  <p class="text-xs muted">${task.description}</p>
+                  <div class="flex items-center gap-2">
+                    <h3 class="text-sm font-bold text-white">${task.title}</h3>
+                    <span class="pill ${done ? 'pill-success' : 'pill-locked'}">${task.category}</span>
+                  </div>
+                  <p class="text-[10px] muted mt-1">${task.description}</p>
                 </div>
                 <span class="text-sm font-bold text-emerald-400">+${task.reward}⭐</span>
               </div>
-              <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
-                <div class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full transition-all" style="width: ${Math.min((task.progress / task.target) * 100, 100)}%"></div>
+
+              <div class="progress-bar">
+                <div class="h-full bg-gradient-to-r from-emerald-500 to-teal-400" style="width:${width}%"></div>
               </div>
+
               <div class="flex justify-between items-center text-[10px] muted">
                 <span>${task.progress} / ${task.target}</span>
-                <button onclick="app.claimTask(${task.id})" class="px-3 py-1 rounded-lg ${done ? 'bg-emerald-600 text-white font-semibold' : 'bg-slate-700 text-slate-400 cursor-not-allowed'}" ${done ? '' : 'disabled'}>
-                  ${done ? '✅ Odbierz' : 'W trakcie'}
+                <button onclick="app.claimTask('${task.id}')" class="px-3 py-1.5 rounded-lg ${done ? 'bg-emerald-600 text-white font-semibold' : 'bg-slate-700 text-slate-400'}">
+                  ${done ? 'Odebrano' : 'Wykonaj'}
                 </button>
               </div>
             </div>
@@ -747,170 +651,175 @@
         }).join('');
       },
 
-      updateMiningRate() {
-        const rate = this.gameState.level * 10 + (this.tasks[1]?.progress * 5 || 0);
-        document.getElementById('mining-rate').textContent = `+${rate}⭐/h`;
+      renderReferral() {
+        document.getElementById('ref-link').value = `https://t.me/TechnixProBot?start=ref_${this.user.id}`;
+        document.getElementById('ref-friends').textContent = this.state.referralFriends;
+        document.getElementById('ref-earnings').textContent = this.state.referralEarnings;
+        document.getElementById('ref-ctr').textContent = `${Math.min((this.state.referralFriends / 50) * 100, 100).toFixed(0)}%`;
+
+        const steps = [
+          'Udostępnij swój unikalny link w Telegramie, Discordzie i społecznościach.',
+          'Każdy aktywny użytkownik może wejść po linku i potwierdzić rejestrację.',
+          'Otrzymujesz bonus za aktywność oraz za kolejny poziom zaproszonego użytkownika.'
+        ];
+
+        document.getElementById('ref-steps').innerHTML = steps.map((step, index) => `
+          <div class="flex gap-3 items-start bg-slate-900/60 border border-slate-800 rounded-xl p-3">
+            <div class="w-6 h-6 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 text-[10px] font-bold flex items-center justify-center text-slate-950">${index + 1}</div>
+            <p class="text-xs text-slate-200">${step}</p>
+          </div>
+        `).join('');
       },
 
-      switchScreen(screenName) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-        document.getElementById(`screen-${screenName}`)?.classList.remove('hidden');
+      renderRewards() {
+        const list = document.getElementById('rewards-list');
+        list.innerHTML = this.state.rewards.map(reward => `
+          <div class="panel p-4 space-y-3 ${reward.unlocked ? 'border-emerald-500/30' : ''}">
+            <div class="flex justify-between items-start">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500/25 to-cyan-500/25 border border-slate-700 flex items-center justify-center">
+                  <i class="${reward.icon} text-cyan-300"></i>
+                </div>
+                <div>
+                  <h3 class="text-sm font-bold text-white">${reward.title}</h3>
+                  <p class="text-[10px] muted">${reward.description}</p>
+                </div>
+              </div>
+              <span class="pill ${reward.unlocked ? 'pill-success' : 'pill-locked'}">${reward.unlocked ? 'Odebrane' : reward.badge}</span>
+            </div>
 
-        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-        const activeBtn = document.querySelector(`.nav-btn[onclick*="switchScreen('${screenName}')"]`);
-        if (activeBtn) activeBtn.classList.add('active');
-
-        const titles = {
-          home: 'Sieć społeczna',
-          crypto: 'Mining',
-          gift: 'Zadania',
-          wallet: 'Portfel',
-          profile: 'Profil',
-          admin: 'Administrator',
-          menu: 'Menu'
-        };
-        document.getElementById('header-title').textContent = titles[screenName] || screenName;
+            <div class="flex items-center justify-between">
+              <div class="text-sm font-black text-violet-400">${reward.reward} ⭐</div>
+              <button onclick="app.claimReward('${reward.id}')" class="px-3 py-1.5 rounded-lg ${reward.unlocked ? 'bg-emerald-600 text-white' : 'bg-violet-600 text-white'}">
+                ${reward.unlocked ? 'Zobacz' : 'Odbierz'}
+              </button>
+            </div>
+          </div>
+        `).join('');
       },
 
-      mineClick() {
-        if (this.gameState.energy >= 1) {
-          this.gameState.stars += 1;
-          this.gameState.energy -= 1;
-          this.gameState.totalMined += 1;
-
-          const clickTask = this.tasks.find(t => t.type === 'clicks');
-          if (clickTask) clickTask.progress++;
-
-          const feedback = document.getElementById('click-feedback');
-          feedback.textContent = '+1 ⭐';
-          setTimeout(() => feedback.textContent = '', 1000);
-
-          this.render();
-        } else {
-          this.showToast('❌ Brak energii! Czekaj na regenerację.');
-        }
+      renderRanking() {
+        const list = document.getElementById('ranking-list');
+        list.innerHTML = this.state.leaderboard.map(entry => `
+          <div class="panel p-3 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-cyan-400 text-[10px] font-black flex items-center justify-center text-white">#${entry.rank}</div>
+              <div>
+                <div class="text-sm font-bold text-white">${entry.name}</div>
+                <div class="text-[10px] muted">${entry.badge} • Level ${entry.level}</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-sm font-black text-cyan-400">${entry.stars}</div>
+              <div class="text-[10px] muted">⭐</div>
+            </div>
+          </div>
+        `).join('');
       },
 
-      claimDailyBonus() {
-        const now = new Date();
-        const lastBonus = this.gameState.lastDailyBonus ? new Date(this.gameState.lastDailyBonus) : null;
+      renderHistory() {
+        const list = document.getElementById('history-list');
+        list.innerHTML = this.state.history.map(item => `
+          <div class="panel p-3 flex items-start gap-3">
+            <div class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center">
+              <i class="${item.type === 'bonus' ? 'fa-solid fa-sparkles text-cyan-400' : item.type === 'mission' ? 'fa-solid fa-check text-emerald-400' : item.type === 'event' ? 'fa-solid fa-calendar-check text-violet-400' : item.type === 'reward' ? 'fa-solid fa-gift text-pink-400' : 'fa-solid fa-wallet text-amber-400'}"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-start gap-2">
+                <div class="text-sm font-bold text-white">${item.title}</div>
+                <div class="text-xs font-bold text-emerald-400">${item.value}</div>
+              </div>
+              <div class="text-[10px] muted mt-1">${item.time}</div>
+            </div>
+          </div>
+        `).join('');
+      },
 
-        if (lastBonus && now.toDateString() === lastBonus.toDateString()) {
-          this.showToast('⏳ Bonus już odebrany dziś!');
-          return;
-        }
+      renderRanks() {
+        const list = document.getElementById('ranks-list');
+        list.innerHTML = this.state.ranks.map(rank => {
+          const current = this.state.stars >= rank.min && this.state.stars <= rank.max;
+          return `
+            <div class="panel p-4 ${current ? 'border-violet-500/40 ring-1 ring-violet-500/30' : ''}">
+              <div class="flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center">
+                    <i class="${rank.icon} ${rank.color}"></i>
+                  </div>
+                  <div>
+                    <div class="text-sm font-bold text-white">${rank.name}</div>
+                    <div class="text-[10px] muted">${rank.description}</div>
+                  </div>
+                </div>
+                <span class="pill ${current ? 'pill-success' : 'pill-locked'}">${current ? 'Aktualna' : `${rank.min}–${rank.max}`}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      },
 
-        this.gameState.stars += 25;
-        this.gameState.lastDailyBonus = now.toISOString();
-        this.gameState.streakDays++;
+      renderAll() {
+        this.renderOverview();
+        this.renderEventLive();
+        this.renderTasks();
+        this.renderReferral();
+        this.renderRewards();
+        this.renderRanking();
+        this.renderHistory();
+        this.renderRanks();
 
-        const userIndex = this.users.findIndex(u => u.id === this.user?.id);
-        if (userIndex >= 0) {
-          this.users[userIndex].stars = this.gameState.stars;
-        }
+        document.getElementById('stars-header').textContent = `${this.state.stars}⭐`;
+        document.getElementById('ref-link').value = `https://t.me/TechnixProBot?start=ref_${this.user.id}`;
+      },
 
-        this.addLog('admin', 'daily_bonus_awarded', `Użytkownik ${this.user?.username || this.user?.first_name || 'demo'} odebrał bonus`);
-        this.showToast('✅ Bonus dzienny odebrany! +25⭐');
-        this.render();
+      joinEvent(eventId) {
+        const event = this.state.events.find(item => item.id === eventId);
+        if (!event) return;
+        this.state.eventsJoined += 1;
+        this.state.stars += 20;
+        event.participants += 12;
+        this.state.history.unshift({ type: 'event', title: `Dołączono do ${event.title}`, value: '+20 ⭐', time: 'Teraz' });
+        this.showToast('✅ Dołączyłeś do wydarzenia!');
+        this.renderAll();
       },
 
       claimTask(taskId) {
-        const task = this.tasks.find(t => t.id === taskId);
-        if (!task || task.progress < task.target) return;
+        const task = this.state.tasks.find(item => item.id === taskId);
+        if (!task) return;
 
-        this.gameState.stars += task.reward;
-        this.gameState.tasksCompleted++;
-
-        if (this.gameState.stars >= this.gameState.level * 1500) {
-          this.gameState.level++;
-          this.showToast(`🎉 Nowy poziom! Jesteś na poziomie ${this.gameState.level}`);
+        if (task.progress >= task.target || task.completed) {
+          if (!task.completed) {
+            task.completed = true;
+            this.state.stars += task.reward;
+            this.state.tasksCompleted += 1;
+            this.state.history.unshift({ type: 'mission', title: task.title, value: `+${task.reward} ⭐`, time: 'Teraz' });
+            this.showToast(`✅ Zadanie ukończone: ${task.title}`);
+          }
+          this.renderAll();
         }
-
-        const userProfile = this.users.find(u => u.id === this.user?.id);
-        if (userProfile) userProfile.stars = this.gameState.stars;
-
-        task.progress = 0;
-        this.showToast(`✅ Zadanie zdobyte! +${task.reward}⭐`);
-        this.render();
       },
 
-      connectTonKeeper() {
-        this.gameState.walletConnected = true;
-        this.gameState.walletAddress = 'EQCX-MO34-XFQX-7Z3Q-7VKZQ-7X6QQ-7Z3Q-7VKZQ';
-        this.gameState.tonBalance = 1.23;
+      claimReward(rewardId) {
+        const reward = this.state.rewards.find(item => item.id === rewardId);
+        if (!reward) return;
 
-        const walletTask = this.tasks.find(t => t.type === 'wallet');
-        if (walletTask) walletTask.progress = 1;
-
-        this.transactions.push({
-          id: `tx_${Date.now()}`,
-          type: 'wallet_connect',
-          userId: this.user?.id || 1,
-          amount: 1.23,
-          currency: 'TON',
-          status: 'completed',
-          timestamp: new Date().toISOString()
-        });
-
-        this.showToast('✅ TON Keeper połączony!');
-        this.render();
+        if (!reward.unlocked) {
+          reward.unlocked = true;
+          this.state.stars += 0;
+          this.state.history.unshift({ type: 'reward', title: `Odebrano: ${reward.title}`, value: reward.badge, time: 'Teraz' });
+          this.showToast(`✅ Odebrano nagrodę: ${reward.title}`);
+        } else {
+          this.showToast(`ℹ️ ${reward.title} jest już aktywne.`);
+        }
+        this.renderAll();
       },
 
-      swapStarsToTon() {
-        const starsInput = document.getElementById('stars-to-swap');
-        const amount = parseInt(starsInput.value) || 0;
-
-        if (amount <= 0) {
-          this.showToast('Wpisz prawidłową ilość');
-          return;
-        }
-
-        if (amount > this.gameState.stars) {
-          this.showToast('❌ Niewystarczająco ⭐');
-          return;
-        }
-
-        if (!this.gameState.walletConnected) {
-          this.showToast('❌ Najpierw połącz portfel TON');
-          return;
-        }
-
-        const tonAmount = amount * 0.001;
-        this.gameState.stars -= amount;
-        this.gameState.tonBalance += tonAmount;
-        starsInput.value = '';
-
-        this.transactions.push({
-          id: `tx_${Date.now()}`,
-          type: 'swap',
-          userId: this.user?.id || 1,
-          amount: amount,
-          currency: '⭐',
-          status: 'completed',
-          timestamp: new Date().toISOString()
-        });
-
-        this.addLog('admin', 'stars_swapped', `Zamieniono ${amount}⭐ na ${tonAmount.toFixed(3)} TON`);
-        this.showToast(`✅ Zamieniono ${amount}⭐ na ${tonAmount.toFixed(3)} TON`);
-        this.render();
-      },
-
-      copyRefLink() {
+      copyReferralLink() {
         const link = document.getElementById('ref-link').value;
-        navigator.clipboard.writeText(link).then(() => {
-          this.showToast('✅ Link skopiowany!');
-        });
-      },
-
-      showSettings() {
-        this.showToast('⚙️ Ustawienia dostępne wkrótce');
-      },
-
-      logout() {
-        if (confirm('Na pewno chcesz się wylogować?')) {
-          localStorage.removeItem('technixpro_save');
-          this.showToast('Wylogowano...');
-          window.location.reload();
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(link).then(() => this.showToast('✅ Link polecenia skopiowany!'));
+        } else {
+          this.showToast('⚠️ Kopiowanie nie jest dostępne w tej przeglądarce.');
         }
       },
 
@@ -919,430 +828,36 @@
         toast.textContent = message;
         toast.classList.add('show');
         clearTimeout(this.toastTimer);
-        this.toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+        this.toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
       },
 
       save() {
-        localStorage.setItem('technixpro_save', JSON.stringify({
-          gameState: this.gameState,
-          tasks: this.tasks,
-          posts: this.posts,
-          users: this.users,
-          transactions: this.transactions,
-          logs: this.logs
-        }));
+        const payload = JSON.stringify(this.state);
+        localStorage.setItem('technixpro_community_state', payload);
       },
 
-      load() {
-        const saved = localStorage.getItem('technixpro_save');
-        if (saved) {
-          const data = JSON.parse(saved);
-          this.gameState = { ...this.gameState, ...data.gameState };
-          this.tasks = data.tasks || this.tasks;
-          this.posts = data.posts || this.posts;
-          this.users = data.users || this.users;
-          this.transactions = data.transactions || this.transactions;
-          this.logs = data.logs || this.logs;
+      loadData() {
+        try {
+          const saved = localStorage.getItem('technixpro_community_state');
+          if (!saved) return;
+          const parsed = JSON.parse(saved);
+          this.state = { ...this.state, ...parsed };
+        } catch (error) {
+          console.warn('Brak zapisanego stanu lub błąd odczytu:', error);
         }
-        this.ensureAdminDataSeed();
-        if (this.user && this.users.length) {
-          const current = this.users.find(u => u.id === this.user.id);
-          if (current) {
-            this.gameState.stars = current.stars || this.gameState.stars;
-            this.gameState.level = current.level || this.gameState.level;
-          }
-        }
-      },
-
-      startEnergyRegen() {
-        setInterval(() => {
-          if (this.gameState.energy < this.gameState.maxEnergy) {
-            this.gameState.energy += 1;
-            this.render();
-          }
-        }, 10000);
-      },
-
-      isAdmin() {
-        return !!(this.user && (this.user.is_admin === true || this.user.role === 'admin' || (this.user.roles && this.user.roles.includes('admin'))));
-      },
-
-      ensureAdminUI() {
-        const navBtn = document.getElementById('nav-admin-btn');
-        if (navBtn) {
-          if (this.isAdmin()) navBtn.classList.remove('hidden');
-          else navBtn.classList.add('hidden');
-        }
-      },
-
-      addLog(actor, action, details) {
-        this.logs.unshift({
-          id: `log_${Date.now()}_${Math.random().toString(16).slice(2)}`,
-          actor,
-          action,
-          details,
-          timestamp: new Date().toISOString()
-        });
-        if (this.logs.length > 200) this.logs = this.logs.slice(0, 200);
-      },
-
-      reloadAdminData() {
-        this.renderAdmin();
-        this.showToast('✅ Dane administracyjne odświeżone');
-      },
-
-      renderAdmin() {
-        if (!this.isAdmin()) return;
-
-        const usersList = document.getElementById('admin-users-list');
-        const tasksList = document.getElementById('admin-tasks-list');
-        const postsList = document.getElementById('admin-posts-list');
-        const txList = document.getElementById('admin-tx-list');
-        const logsList = document.getElementById('admin-logs');
-
-        document.getElementById('admin-users-count').textContent = this.users.length;
-        document.getElementById('admin-tx-count').textContent = this.transactions.length;
-
-        const query = (document.getElementById('admin-user-search')?.value || '').trim().toLowerCase();
-        const filteredUsers = !query ? this.users : this.users.filter(u => {
-          return [String(u.id), u.username || '', u.email || '', u.role || ''].join(' ').toLowerCase().includes(query);
-        });
-
-        usersList.innerHTML = filteredUsers.map(u => `
-          <div class="bg-slate-900/50 rounded-xl p-3 border border-slate-800">
-            <div class="flex justify-between items-start gap-2">
-              <div>
-                <div class="text-sm font-bold text-white">${u.username || 'user'} <span class="text-[10px] text-slate-400">#${u.id}</span></div>
-                <div class="text-[11px] muted">${u.email || 'no-email'} • ${u.role || 'user'} • ${u.status || 'active'}</div>
-              </div>
-              <div class="text-right">
-                <div class="text-xs font-bold text-cyan-400">${u.stars || 0}⭐</div>
-                <div class="text-[10px] muted">lvl ${u.level || 1}</div>
-              </div>
-            </div>
-            <div class="flex gap-2 mt-3">
-              <button onclick="app.adminAdjustStars(${u.id}, 100)" class="px-2 py-1 rounded-lg bg-emerald-600 text-[10px] font-semibold">+100⭐</button>
-              <button onclick="app.adminAdjustStars(${u.id}, -50)" class="px-2 py-1 rounded-lg bg-amber-600 text-[10px] font-semibold">-50⭐</button>
-              <button onclick="app.adminToggleUserStatus(${u.id})" class="px-2 py-1 rounded-lg bg-slate-700 text-[10px] font-semibold">${u.status === 'active' ? 'Zablokuj' : 'Odblokuj'}</button>
-            </div>
-          </div>
-        `).join('') || '<div class="text-[11px] muted">Brak użytkowników według filtra.</div>';
-
-        tasksList.innerHTML = this.tasks.map(task => `
-          <div class="bg-slate-900/50 rounded-xl p-3 border border-slate-800">
-            <div class="flex justify-between items-center gap-2">
-              <div>
-                <div class="text-sm font-bold text-white">${task.title}</div>
-                <div class="text-[11px] muted">${task.description}</div>
-              </div>
-              <div class="text-right">
-                <div class="text-xs font-bold text-emerald-400">+${task.reward}⭐</div>
-                <div class="text-[10px] muted">${task.progress}/${task.target}</div>
-              </div>
-            </div>
-            <div class="flex gap-2 mt-3">
-              <button onclick="app.openEditTaskModal(${task.id})" class="px-2 py-1 rounded-lg bg-violet-600 text-[10px] font-semibold">Edytuj</button>
-              <button onclick="app.adminDeleteTask(${task.id})" class="px-2 py-1 rounded-lg bg-red-600 text-[10px] font-semibold">Usuń</button>
-            </div>
-          </div>
-        `).join('');
-
-        postsList.innerHTML = this.posts.map(post => `
-          <div class="bg-slate-900/50 rounded-xl p-3 border border-slate-800">
-            <div class="flex justify-between items-center">
-              <div class="text-sm font-bold text-cyan-400">${post.author}</div>
-              <div class="text-[10px] muted">${post.time}</div>
-            </div>
-            <div class="text-xs text-slate-200 mt-2">${post.text}</div>
-            <div class="flex gap-2 mt-3">
-              <button onclick="app.openEditPostModal(${post.id})" class="px-2 py-1 rounded-lg bg-slate-700 text-[10px] font-semibold">Edytuj</button>
-              <button onclick="app.adminDeletePost(${post.id})" class="px-2 py-1 rounded-lg bg-red-600 text-[10px] font-semibold">Usuń</button>
-            </div>
-          </div>
-        `).join('');
-
-        txList.innerHTML = this.transactions.slice(0, 8).map(tx => `
-          <div class="bg-slate-900/50 rounded-xl p-3 border border-slate-800">
-            <div class="flex justify-between items-center gap-2">
-              <div>
-                <div class="text-sm font-bold text-white">${tx.type}</div>
-                <div class="text-[10px] muted">#${tx.userId || 'system'} • ${tx.status}</div>
-              </div>
-              <div class="text-right">
-                <div class="text-xs font-bold ${tx.status === 'pending' ? 'text-amber-400' : 'text-emerald-400'}">${tx.amount} ${tx.currency}</div>
-                <div class="text-[10px] muted">${new Date(tx.timestamp).toLocaleString()}</div>
-              </div>
-            </div>
-            <div class="flex gap-2 mt-3">
-              ${tx.status === 'pending' ? `<button onclick="app.adminApproveTx('${tx.id}')" class="px-2 py-1 rounded-lg bg-emerald-600 text-[10px] font-semibold">Approve</button>` : ''}
-              <button onclick="app.adminRejectTx('${tx.id}')" class="px-2 py-1 rounded-lg bg-red-600 text-[10px] font-semibold">Reject</button>
-            </div>
-          </div>
-        `).join('') || '<div class="text-[11px] muted">Brak transakcji.</div>';
-
-        logsList.innerHTML = this.logs.slice(0, 12).map(log => `
-          <div class="py-1 border-b border-slate-800 text-[12px]">
-            <span class="text-cyan-400">${log.actor}</span> • ${log.action} • <span class="text-slate-300">${log.details}</span>
-            <div class="text-[10px] muted mt-1">${new Date(log.timestamp).toLocaleString()}</div>
-          </div>
-        `).join('');
-      },
-
-      adminSearchUsers() {
-        this.renderAdmin();
-      },
-
-      adminAdjustStars(userId, delta) {
-        const user = this.users.find(u => u.id === userId);
-        if (!user) return;
-        user.stars = Math.max(0, (user.stars || 0) + delta);
-        if (user.id === this.user?.id) {
-          this.gameState.stars = user.stars;
-        }
-        this.addLog('admin', 'stars_adjusted', `Użytkownik #${userId} dostal korektę ${delta}⭐`);
-        this.showToast(`✅ Zaktualizowano saldo użytkownika #${userId}`);
-        this.render();
-      },
-
-      adminToggleUserStatus(userId) {
-        const user = this.users.find(u => u.id === userId);
-        if (!user) return;
-        user.status = user.status === 'active' ? 'blocked' : 'active';
-        this.addLog('admin', 'user_status_toggled', `Użytkownik #${userId} -> ${user.status}`);
-        this.showToast(`✅ Status użytkownika #${userId}: ${user.status}`);
-        this.render();
-      },
-
-      adminDeleteTask(taskId) {
-        if (!confirm('Usunąć zadanie?')) return;
-        this.tasks = this.tasks.filter(t => t.id !== taskId);
-        this.addLog('admin', 'task_deleted', `Zadanie #${taskId} usunięte`);
-        this.showToast('✅ Zadanie usunięte');
-        this.render();
-      },
-
-      adminDeletePost(postId) {
-        if (!confirm('Usunąć post?')) return;
-        this.posts = this.posts.filter(p => p.id !== postId);
-        this.addLog('admin', 'post_deleted', `Post #${postId} usunięty`);
-        this.showToast('✅ Post usunięty');
-        this.render();
-      },
-
-      adminApproveTx(txId) {
-        const tx = this.transactions.find(t => t.id === txId);
-        if (!tx) return;
-        tx.status = 'completed';
-        this.addLog('admin', 'tx_approved', `Transakcja #${txId} zatwierdzona`);
-        this.showToast('✅ Transakcja zatwierdzona');
-        this.render();
-      },
-
-      adminRejectTx(txId) {
-        const tx = this.transactions.find(t => t.id === txId);
-        if (!tx) return;
-        tx.status = 'rejected';
-        this.addLog('admin', 'tx_rejected', `Transakcja #${txId} odrzucona`);
-        this.showToast('✅ Transakcja odrzucona');
-        this.render();
-      },
-
-      adminExportCsv() {
-        const rows = [
-          ['id', 'type', 'userId', 'amount', 'currency', 'status', 'timestamp'],
-          ...this.transactions.map(tx => [tx.id, tx.type, tx.userId, tx.amount, tx.currency, tx.status, tx.timestamp])
-        ];
-        const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        link.href = url;
-        link.download = `technixpro_tx_export_${Date.now()}.csv`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-        this.showToast('✅ CSV wyeksportowane');
-      },
-
-      openNewTaskModal() {
-        this.showAdminModal('Dodaj nowe zadanie', `
-          <input id="admin-task-id" type="hidden" value="0">
-          <input id="admin-task-title" class="admin-input" placeholder="Tytuł zadania" value="">
-          <input id="admin-task-description" class="admin-input" placeholder="Opis zadania" value="">
-          <div class="grid grid-cols-2 gap-2">
-            <input id="admin-task-reward" class="admin-input" type="number" placeholder="Nagroda ⭐" value="50">
-            <input id="admin-task-target" class="admin-input" type="number" placeholder="Cel" value="1">
-          </div>
-          <select id="admin-task-type" class="admin-input">
-            <option value="clicks">clicks</option>
-            <option value="referral">referral</option>
-            <option value="wallet">wallet</option>
-            <option value="stars">stars</option>
-            <option value="streak">streak</option>
-          </select>
-          <div class="flex gap-2 mt-2">
-            <button onclick="app.saveTaskFromModal()" class="flex-1 bg-violet-600 px-3 py-2 rounded-xl text-xs font-semibold">Zapisz</button>
-            <button onclick="app.closeAdminModal()" class="flex-1 bg-slate-700 px-3 py-2 rounded-xl text-xs font-semibold">Anuluj</button>
-          </div>
-        `);
-      },
-
-      openEditTaskModal(taskId) {
-        const task = this.tasks.find(t => t.id === taskId);
-        if (!task) return;
-        this.showAdminModal('Edytuj zadanie', `
-          <input id="admin-task-id" type="hidden" value="${task.id}">
-          <input id="admin-task-title" class="admin-input" placeholder="Tytuł zadania" value="${task.title.replace(/"/g, '&quot;')}">
-          <input id="admin-task-description" class="admin-input" placeholder="Opis zadania" value="${task.description.replace(/"/g, '&quot;')}">
-          <div class="grid grid-cols-2 gap-2">
-            <input id="admin-task-reward" class="admin-input" type="number" placeholder="Nagroda ⭐" value="${task.reward}">
-            <input id="admin-task-target" class="admin-input" type="number" placeholder="Cel" value="${task.target}">
-          </div>
-          <select id="admin-task-type" class="admin-input">
-            <option value="clicks" ${task.type === 'clicks' ? 'selected' : ''}>clicks</option>
-            <option value="referral" ${task.type === 'referral' ? 'selected' : ''}>referral</option>
-            <option value="wallet" ${task.type === 'wallet' ? 'selected' : ''}>wallet</option>
-            <option value="stars" ${task.type === 'stars' ? 'selected' : ''}>stars</option>
-            <option value="streak" ${task.type === 'streak' ? 'selected' : ''}>streak</option>
-          </select>
-          <div class="flex gap-2 mt-2">
-            <button onclick="app.saveTaskFromModal()" class="flex-1 bg-violet-600 px-3 py-2 rounded-xl text-xs font-semibold">Zapisz</button>
-            <button onclick="app.closeAdminModal()" class="flex-1 bg-slate-700 px-3 py-2 rounded-xl text-xs font-semibold">Anuluj</button>
-          </div>
-        `);
-      },
-
-      saveTaskFromModal() {
-        const id = Number(document.getElementById('admin-task-id').value || 0);
-        const title = document.getElementById('admin-task-title').value.trim();
-        const description = document.getElementById('admin-task-description').value.trim();
-        const reward = Number(document.getElementById('admin-task-reward').value || 0);
-        const target = Number(document.getElementById('admin-task-target').value || 1);
-        const type = document.getElementById('admin-task-type').value;
-
-        if (!title || !description) {
-          this.showToast('❌ Wypełnij tytuł i opis zadania');
-          return;
-        }
-
-        if (id && this.tasks.some(t => t.id === id)) {
-          const task = this.tasks.find(t => t.id === id);
-          task.title = title;
-          task.description = description;
-          task.reward = reward;
-          task.target = Math.max(1, target);
-          task.type = type;
-          task.progress = Math.min(task.progress || 0, task.target);
-          this.addLog('admin', 'task_updated', `Zadanie #${id} zaktualizowane`);
-        } else {
-          const maxId = this.tasks.reduce((m, t) => Math.max(m, Number(t.id) || 0), 0) || 0;
-          this.tasks.unshift({
-            id: maxId + 1,
-            title,
-            description,
-            reward,
-            type,
-            target: Math.max(1, target),
-            progress: 0
-          });
-          this.addLog('admin', 'task_created', `Utworzono zadanie ${title}`);
-        }
-
-        this.closeAdminModal();
-        this.showToast('✅ Zadanie zapisane');
-        this.render();
-      },
-
-      openNewPostModal() {
-        this.showAdminModal('Dodaj post', `
-          <input id="admin-post-id" type="hidden" value="0">
-          <input id="admin-post-author" class="admin-input" placeholder="Autor" value="Admin">
-          <textarea id="admin-post-text" class="admin-input" style="min-height:110px; resize:vertical;" placeholder="Treść posta"></textarea>
-          <div class="flex gap-2 mt-2">
-            <button onclick="app.savePostFromModal()" class="flex-1 bg-emerald-600 px-3 py-2 rounded-xl text-xs font-semibold">Zapisz</button>
-            <button onclick="app.closeAdminModal()" class="flex-1 bg-slate-700 px-3 py-2 rounded-xl text-xs font-semibold">Anuluj</button>
-          </div>
-        `);
-      },
-
-      openEditPostModal(postId) {
-        const post = this.posts.find(p => p.id === postId);
-        if (!post) return;
-        this.showAdminModal('Edytuj post', `
-          <input id="admin-post-id" type="hidden" value="${post.id}">
-          <input id="admin-post-author" class="admin-input" placeholder="Autor" value="${post.author.replace(/"/g, '&quot;')}">
-          <textarea id="admin-post-text" class="admin-input" style="min-height:110px; resize:vertical;" placeholder="Treść posta">${post.text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
-          <div class="flex gap-2 mt-2">
-            <button onclick="app.savePostFromModal()" class="flex-1 bg-emerald-600 px-3 py-2 rounded-xl text-xs font-semibold">Zapisz</button>
-            <button onclick="app.closeAdminModal()" class="flex-1 bg-slate-700 px-3 py-2 rounded-xl text-xs font-semibold">Anuluj</button>
-          </div>
-        `);
-      },
-
-      savePostFromModal() {
-        const id = Number(document.getElementById('admin-post-id').value || 0);
-        const author = document.getElementById('admin-post-author').value.trim() || 'Admin';
-        const text = document.getElementById('admin-post-text').value.trim();
-
-        if (!text) {
-          this.showToast('❌ Wpisz treść posta');
-          return;
-        }
-
-        if (id) {
-          const post = this.posts.find(p => p.id === id);
-          if (post) {
-            post.author = author;
-            post.text = text;
-            post.time = 'just now';
-            this.addLog('admin', 'post_updated', `Post #${id} zaktualizowany`);
-          }
-        } else {
-          const maxId = this.posts.reduce((m, p) => Math.max(m, Number(p.id) || 0), 0) || 0;
-          this.posts.unshift({
-            id: maxId + 1,
-            author,
-            text,
-            time: 'teraz'
-          });
-          this.addLog('admin', 'post_created', `Post ${author} utworzony`);
-        }
-
-        this.closeAdminModal();
-        this.showToast('✅ Post zapisany');
-        this.render();
-      },
-
-      showAdminModal(title, innerHtml) {
-        const modal = document.getElementById('admin-modal');
-        document.getElementById('admin-modal-title').textContent = title;
-        document.getElementById('admin-modal-body').innerHTML = innerHtml;
-        modal.classList.remove('hidden');
-      },
-
-      closeAdminModal() {
-        document.getElementById('admin-modal').classList.add('hidden');
       }
     };
 
     document.addEventListener('DOMContentLoaded', () => {
-      app.initTelegram();
-      app.load();
-      app.render();
-      app.startEnergyRegen();
-
-      document.getElementById('mining-click-zone').addEventListener('click', () => app.mineClick());
-
-      document.querySelectorAll('button').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          if (!e.target.closest('.nav-btn')) return;
-          document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
+      app.init();
+      setInterval(() => {
+        app.state.events.forEach(event => {
+          if (event.status === 'live') {
+            event.progress = Math.min(100, event.progress + 1);
+          }
         });
-      });
-
-      document.getElementById('admin-user-search')?.addEventListener('input', () => app.renderAdmin());
+        app.renderEventLive();
+      }, 60000);
     });
   </script>
 </body>
