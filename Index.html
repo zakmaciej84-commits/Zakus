@@ -1272,7 +1272,7 @@
               <p class="text-[9px] uppercase tracking-[0.25em] text-violet-300 font-bold">Zasoby</p>
               <h3 class="text-lg font-bold text-white">TechnixPro Mining</h3>
             </div>
-            <span class="tp-level-pill">TP <span id="tpBalance">0</span></span>
+            <span class="tp-level-pill">⭐ <span id="tpBalance">0</span></span>
           </div>
 
           <div class="flex items-center justify-between text-[10px] muted">
@@ -1290,7 +1290,7 @@
               <p class="text-[9px] uppercase tracking-[0.25em] text-cyan-300 font-bold">RIG Builder</p>
               <h3 class="text-base font-bold text-white">Budowa stanowiska</h3>
             </div>
-            <span class="text-[10px] muted">Faza 1 (Suma: 1000 ★)</span>
+            <span class="text-[10px] muted">Telegram Stars · płatności realne</span>
           </div>
 
           <div class="rig-station">
@@ -1333,6 +1333,11 @@
             </div>
           </div>
 
+          <div class="rounded-xl border border-cyan-500/20 bg-cyan-500/5 p-2.5 text-[10px] text-cyan-200 flex items-center justify-between">
+            <span>Waluta:</span>
+            <span class="font-bold text-white">Telegram Stars</span>
+          </div>
+
           <div class="rig-shop" id="rig-shop"></div>
         </div>
       </section>
@@ -1366,7 +1371,101 @@
   </main>
 
   <script>
+    const telegramStarsCatalog = [
+      { key: 'monitor', name: 'Monitor 4K', icon: '🖥️', cost: 25, boost: '+15% throughput' },
+      { key: 'gpu', name: 'GPU X9', icon: '🎮', cost: 35, boost: '+28% render power' },
+      { key: 'cpu', name: 'CPU Core', icon: '⚙️', cost: 20, boost: '+12% processing' },
+      { key: 'fan', name: 'Cooling System', icon: '❄️', cost: 15, boost: '+10% stability' },
+      { key: 'ram', name: 'RAM Burst', icon: '💾', cost: 18, boost: '+11% memory' },
+      { key: 'keyboard', name: 'Console Keypad', icon: '⌨️', cost: 12, boost: '+8% input speed' }
+    ];
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      if (!toast) return;
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    function getTpBalance() {
+      const node = document.getElementById('tpBalance');
+      return node ? Number(node.textContent.trim() || 0) : 0;
+    }
+
+    function setTpBalance(value) {
+      const node = document.getElementById('tpBalance');
+      if (node) node.textContent = String(value);
+    }
+
+    function handleTelegramStarsPurchase(productKey, productName, productCost) {
+      const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+
+      const payload = {
+        type: 'rig_purchase',
+        product: productKey,
+        name: productName,
+        cost: productCost,
+        currency: 'telegram_stars',
+        order: 'rig-builder'
+      };
+
+      if (tg && typeof tg.sendData === 'function') {
+        tg.sendData(JSON.stringify(payload));
+        showToast(`${productName} dodany do koszyka — czeka na potwierdzenie Telegram Stars.`);
+        return;
+      }
+
+      if (tg && typeof tg.showPopup === 'function') {
+        tg.showPopup({
+          title: 'Telegram Stars',
+          message: `Kup ${productName} za ${productCost} Stars.`
+        });
+        return;
+      }
+
+      setTpBalance(getTpBalance() + productCost);
+      showToast(`${productName} zakupiony za ${productCost} Telegram Stars.`);
+    }
+
+    function renderRigShop() {
+      const host = document.getElementById('rig-shop');
+      if (!host) return;
+
+      host.innerHTML = telegramStarsCatalog.map(item => `
+        <div class="shop-item">
+          <div class="shop-item-icon">${item.icon}</div>
+          <div>
+            <div class="text-[10px] uppercase tracking-[0.14em] text-slate-400">RIG</div>
+            <div class="font-semibold text-white text-xs">${item.name}</div>
+            <div class="text-[9px] text-cyan-300">${item.boost}</div>
+          </div>
+          <button
+            class="bg-gradient-to-r from-cyan-500 to-violet-500 text-white stars-buy-btn"
+            data-key="${item.key}"
+            data-name="${item.name}"
+            data-cost="${item.cost}"
+          >
+            ${item.cost} ⭐
+          </button>
+        </div>
+      `).join('');
+
+      document.querySelectorAll('.stars-buy-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          handleTelegramStarsPurchase(
+            btn.dataset.key,
+            btn.dataset.name,
+            Number(btn.dataset.cost)
+          );
+        });
+      });
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
+      renderRigShop();
+
       const screens = document.querySelectorAll('.screen');
       const navButtons = document.querySelectorAll('[data-screen]');
       const homeTabs = document.querySelectorAll('[data-home-tab]');
